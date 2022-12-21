@@ -19,7 +19,6 @@
     "@pnotify/mobile": "^5.2.0",
     "@prettier/plugin-ruby": "^1.6.1",
     "@rails/ujs": "^6.1.7",
-    "@reasonml-community/graphql-ppx": "^1.2.3",
     "@rescript/react": "^0.10.3",
     "animate.css": "3.7.2",
     "autoprefixer": "^10.4.9",

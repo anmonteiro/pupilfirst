@@ -1,0 +1,63 @@
+(subdir
+ node_modules
+ (vendored_dirs @glennsl @rescript bs-fetch bs-webapi)
+ (dirs @glennsl @rescript bs-fetch bs-webapi)
+ (subdir
+  @glennsl
+  (subdir
+   bs-json
+   (subdir
+    src
+    (library
+     (name bs_json)
+     (wrapped false)
+     (modes melange)))))
+ (subdir
+  @rescript
+  (vendored_dirs react)
+  (dirs react)
+  (subdir
+   react
+   (dirs src)
+   (subdir
+    src
+    (include_subdirs unqualified)
+    (library
+     (name rescript_react)
+     (wrapped false)
+     (flags :standard -bs-jsx 3)
+     (modes melange)))))
+ (subdir
+  bs-fetch
+  (subdir
+   src
+   (library
+    ; double underscore to not match the module Bs_fetch so that Fetch__Iterator is exposed
+    (name bs__fetch)
+    (wrapped false)
+    (modes melange))))
+ (subdir
+  bs-webapi
+  (vendored_dirs src)
+  (dirs src)
+  (subdir
+   src
+   (include_subdirs unqualified)
+   (library
+    (name webapi)
+    (modes melange)
+    (libraries bs__fetch)))))
+
+(subdir
+ app
+ (subdir
+  frontend
+  (include_subdirs unqualified)
+  (melange.emit
+   (target output)
+   (alias main)
+   (compile_flags :standard -bs-jsx 3)
+   (preprocess
+    (pps graphql_ppx))
+   (libraries bs__fetch bs_json rescript_react graphql_ppx.graphql_ppx_runtime webapi)
+   (module_system es6))))
