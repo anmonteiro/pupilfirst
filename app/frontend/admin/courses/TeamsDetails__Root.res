@@ -10,12 +10,14 @@ let pageLinks = studentId => [
     ~title=t("pages.details"),
     ~icon="fas fa-edit",
     ~selected=true,
+    ()
   ),
   School__PageHeader.makeLink(
     ~href=`/school/teams/${studentId}/actions`,
     ~title=t("pages.actions"),
     ~icon="fas fa-cog",
     ~selected=false,
+    ()
   ),
 ]
 

@@ -8,12 +8,14 @@ let pageLinks = cohortId => [
     ~title="Details",
     ~icon="fas fa-edit",
     ~selected=true,
+    ()
   ),
   School__PageHeader.makeLink(
     ~href=`/school/cohorts/${cohortId}/actions`,
     ~title="Actions",
     ~icon="fas fa-cog",
     ~selected=false,
+    ()
   ),
 ]
 

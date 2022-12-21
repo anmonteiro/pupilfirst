@@ -39,7 +39,7 @@ build: [
 dev-repo: "git+https://github.com/pupilfirst/pupilfirst.git"
 pin-depends: [
   [ "dune.dev" "git+https://github.com/ocaml/dune.git#49680880c796cba0f31657c385116c96e2d1b50c" ]
-  [ "graphql_ppx.dev" "git+https://github.com/teamwalnut/graphql-ppx.git#cb02945809133a9e9c1eec3bb0cf141a7b3cb0cd" ]
+  [ "graphql_ppx.dev" "git+https://github.com/jchavarri/graphql-ppx.git#2598910886f1d2d3869406ae7eb787341d8dce6b" ]
   [ "melange-compiler-libs.dev" "git+https://github.com/melange-re/melange-compiler-libs.git#426463a77d0b70ecf0108c98e6a86d325cd01472" ]
   [ "meldep.dev" "git+https://github.com/melange-re/melange.git#2dec6b553c36027b6550ee323f264f7d4662d966" ]
   [ "melange.dev" "git+https://github.com/melange-re/melange.git#2dec6b553c36027b6550ee323f264f7d4662d966" ]

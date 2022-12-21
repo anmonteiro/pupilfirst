@@ -8,12 +8,14 @@ let pageLinks = courseId => [
     ~title=t("pages.manual"),
     ~icon="fas fa-user",
     ~selected=true,
+    ()
   ),
   School__PageHeader.makeLink(
     ~href=`/school/courses/${courseId}/students/import`,
     ~title=t("pages.csv_import"),
     ~icon="fas fa-file",
     ~selected=false,
+    ()
   ),
 ]
 

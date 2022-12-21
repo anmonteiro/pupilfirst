@@ -22,7 +22,7 @@ init: create-switch install ## Configure everything to develop this repository i
 install: ## Install development dependencies
 	yarn install
 	opam install -y . --deps-only
-	opam pin -y add $(project_name).dev .
+	opam pin -y -k git add $(project_name).dev .
 	rm -rf node_modules/melange && ln -sfn $$(opam var melange:lib)/runtime node_modules/melange
 
 .PHONY: build

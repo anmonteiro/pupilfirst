@@ -56,8 +56,8 @@
   (melange.emit
    (target output)
    (alias main)
-   (compile_flags :standard -bs-jsx 3)
+   (compile_flags :standard -w -9-61-103 -bs-jsx 3)
    (preprocess
     (pps graphql_ppx))
-   (libraries bs__fetch bs_json rescript_react graphql_ppx.graphql_ppx_runtime webapi)
+   (libraries bs__fetch bs_json rescript_react webapi)
    (module_system es6))))

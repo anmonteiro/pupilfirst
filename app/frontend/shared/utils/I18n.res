@@ -8,6 +8,7 @@
 type key = string
 type value = string
 
+@warning("-69")
 type options = {
   count: option<int>,
   defaults: array<Js.Dict.t<string>>,
