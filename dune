@@ -61,3 +61,7 @@
     (pps graphql_ppx))
    (libraries bs__fetch bs_json rescript_react webapi)
    (module_system es6))))
+
+(alias
+ (name main)
+ (deps bsconfig.json))
