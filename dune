@@ -27,7 +27,7 @@
      (wrapped false)
      (modes melange)
      (preprocess
-      (pps reactjs-jsx-ppx))))))
+      (pps melange.ppx reactjs-jsx-ppx))))))
  (subdir
   bs-fetch
   (subdir
@@ -47,7 +47,9 @@
    (library
     (name webapi)
     (modes melange)
-    (libraries bs__fetch)))))
+    (libraries bs__fetch)
+    (preprocess
+     (pps melange.ppx))))))
 
 (subdir
  app
@@ -59,7 +61,7 @@
    (alias main)
    (compile_flags :standard -w -9-61-103)
    (preprocess
-    (pps graphql_ppx reactjs-jsx-ppx))
+    (pps graphql_ppx melange.ppx reactjs-jsx-ppx))
    (libraries bs__fetch bs_json rescript_react webapi)
    (module_systems es6))))
 
