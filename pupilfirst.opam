@@ -13,11 +13,11 @@ bug-reports: "https://github.com/pupilfirst/pupilfirst/issues"
 depends: [
   "ocaml" {>= "4.14.0" & < "5.0.0"}
   "reason" {>= "3.8.1" & < "4.0.0"}
-  "dune" {dev}
-  "melange-compiler-libs" {dev}
-  "melange" {dev}
-  "reactjs-jsx-ppx" {dev}
-  "rescript-syntax" {dev}
+  "dune" {>= "3.8.1"}
+  "melange" {>= "1.0.0"}
+  "reactjs-jsx-ppx" {>= "1.0.0"}
+  "rescript-syntax" {>= "1.0.0"}
+  "graphql_ppx" {dev}
   "ocaml-lsp-server" {dev}
   "dot-merlin-reader" {dev}
   "odoc" {with-doc}
@@ -38,10 +38,5 @@ build: [
 ]
 dev-repo: "git+https://github.com/pupilfirst/pupilfirst.git"
 pin-depends: [
-  [ "dune.dev" "git+https://github.com/ocaml/dune.git#243ddb0d8bda0659bd9a80808ea3decb48c1f3d2" ]
   [ "graphql_ppx.dev" "git+https://github.com/jchavarri/graphql-ppx.git#2598910886f1d2d3869406ae7eb787341d8dce6b" ]
-  [ "melange-compiler-libs.dev" "git+https://github.com/melange-re/melange-compiler-libs.git#575ac4c24b296ea897821f9aaee1146ff258c704" ]
-  [ "melange.dev" "git+https://github.com/melange-re/melange.git#3becb7c2735135fb5177bca4274320874acd1a18" ]
-  [ "reactjs-jsx-ppx.dev" "git+https://github.com/melange-re/melange.git#3becb7c2735135fb5177bca4274320874acd1a18" ]
-  [ "rescript-syntax.dev" "git+https://github.com/melange-re/melange.git#3becb7c2735135fb5177bca4274320874acd1a18" ]
 ]
