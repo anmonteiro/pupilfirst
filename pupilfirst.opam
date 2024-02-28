@@ -40,5 +40,9 @@ build: [
 ]
 dev-repo: "git+https://github.com/pupilfirst/pupilfirst.git"
 pin-depends: [
-  [ "graphql_ppx.dev" "git+https://github.com/jchavarri/graphql-ppx.git#59e5637065438bb1ecb3a6652a3bde024dc772cc" ]
+  [ "graphql_ppx.dev" "https://github.com/jchavarri/graphql-ppx/archive/59e5637065438bb1ecb3a6652a3bde024dc772cc.tar.gz" ]
+  [ "melange-json.dev" "https://github.com/melange-community/melange-json/archive/a8fe82f3aa3a55f7614c66f553092896bc1bbefa.tar.gz" ]
+  [ "melange-fetch.dev" "https://github.com/melange-community/melange-fetch/archive/f8b80ce7c8d1487c4cc3dd4cbff86a49458660a2.tar.gz" ]
+  [ "reason-react.dev" "https://github.com/reasonml/reason-react/archive/bfdf052064181846f527a12b26ac0cf6c46a69d9.tar.gz" ]
+  [ "reason-react-ppx.dev" "https://github.com/reasonml/reason-react/archive/bfdf052064181846f527a12b26ac0cf6c46a69d9.tar.gz" ]
 ]
