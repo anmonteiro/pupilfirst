@@ -11,15 +11,17 @@ license: "MIT"
 homepage: "https://github.com/pupilfirst/pupilfirst"
 bug-reports: "https://github.com/pupilfirst/pupilfirst/issues"
 depends: [
-  "ocaml" {>= "4.14.0" & < "5.0.0"}
+  "ocaml"
   "reason" {>= "3.8.1" & < "4.0.0"}
   "dune" {>= "3.8.1"}
-  "melange" {>= "1.0.0"}
-  "reactjs-jsx-ppx" {>= "1.0.0"}
-  "rescript-syntax" {>= "1.0.0"}
-  "graphql_ppx" {dev}
-  "ocaml-lsp-server" {dev}
-  "dot-merlin-reader" {dev}
+  "melange"
+  "melange-fetch"
+  "melange-json"
+  "melange-webapi"
+  "reason-react"
+  "graphql_ppx"
+  "ocaml-lsp-server" {with-test}
+  "ocamlformat" {with-test}
   "odoc" {with-doc}
 ]
 build: [
@@ -38,5 +40,5 @@ build: [
 ]
 dev-repo: "git+https://github.com/pupilfirst/pupilfirst.git"
 pin-depends: [
-  [ "graphql_ppx.dev" "git+https://github.com/jchavarri/graphql-ppx.git#2598910886f1d2d3869406ae7eb787341d8dce6b" ]
+  [ "graphql_ppx.dev" "git+https://github.com/jchavarri/graphql-ppx.git#59e5637065438bb1ecb3a6652a3bde024dc772cc" ]
 ]

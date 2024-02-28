@@ -64,7 +64,7 @@ Here's an example interface, to select few sports.
       |]
       |> Array.map(sportName => Selectable.makeSport(sportName));
     searchCollection
-    |> Js.Array.filter(sport => !(selected |> Array.mem(sport)));
+    |> Js.Array.filter(~f=sport => !(selected |> Array.mem(sport)));
   };
 
   let setSportSearch = (setState, value) => {
@@ -72,14 +72,14 @@ Here's an example interface, to select few sports.
   };
 
   let select = (setState, state, sport) => {
-    let selected = state.selected |> Js.Array.concat([|sport|]);
+    let selected = state.selected |> Js.Array.concat(~other=[|sport|]);
     setState(_state => {searchInput: "", selected});
   };
 
   let deSelect = (setState, state, sport) => {
     let selected =
       state.selected
-      |> Js.Array.filter(selected =>
+      |> Js.Array.filter(~f=selected =>
            Selectable.value(sport) != Selectable.value(selected)
          );
     setState(_state => {searchInput: "", selected});
