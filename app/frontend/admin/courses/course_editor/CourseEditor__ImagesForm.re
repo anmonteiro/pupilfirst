@@ -100,15 +100,9 @@ let updateImage = (send, isCover, event) => {
   let imageFile = React.Event.Form.target(event)##files[0];
 
   if (isCover) {
-    send(
-      
-      SelectCover(imageFile##name, imageFile |> isInvalidImageFile),
-    );
+    send(SelectCover(imageFile##name, imageFile |> isInvalidImageFile));
   } else {
-    send(
-      
-      SelectThumb(imageFile##name, imageFile |> isInvalidImageFile),
-    );
+    send(SelectThumb(imageFile##name, imageFile |> isInvalidImageFile));
   };
 };
 let initialState = () => {

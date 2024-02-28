@@ -61,14 +61,19 @@ let updateTargetSortIndex = (state, send, sortedTargets) => {
     |> Js.Array.filter(~f=t => !Js.Array.includes(~value=t, sortedTargets));
   send(
     UpdateTargets(
-      Js.Array.concat(oldTargets, ~other=Target.updateSortIndex(sortedTargets)),
+      Js.Array.concat(
+        oldTargets,
+        ~other=Target.updateSortIndex(sortedTargets),
+      ),
     ),
   );
 };
 let updateTargetGroupSortIndex = (state, send, sortedTargetGroups) => {
   let oldTargetGroups =
     state.targetGroups
-    |> Js.Array.filter(~f=t => !Js.Array.includes(~value=t, sortedTargetGroups));
+    |> Js.Array.filter(~f=t =>
+         !Js.Array.includes(~value=t, sortedTargetGroups)
+       );
   send(
     UpdateTargetGroups(
       Js.Array.concat(
@@ -105,19 +110,23 @@ let computeIntialState = ((levels, targetGroups, targets, path)) => {
     ->(Belt.Option.flatMap(Belt.Int.fromString))
     ->(
         Belt.Option.flatMap(levelNumber =>
-          Js.Array.find(~f=level => Level.number(level) == levelNumber, levels)
+          Js.Array.find(
+            ~f=level => Level.number(level) == levelNumber,
+            levels,
+          )
         )
       )
     ->(
         Belt.Option.getWithDefault(
           Js.Array.reduce(
             levels,
-            ~f=(max, level) =>
-              if (Level.number(level) > Level.number(max)) {
-                level;
-              } else {
-                max;
-              },
+            ~f=
+              (max, level) =>
+                if (Level.number(level) > Level.number(max)) {
+                  level;
+                } else {
+                  max;
+                },
             ~init=Js.Array.unsafe_get(levels, 0),
           ),
         )

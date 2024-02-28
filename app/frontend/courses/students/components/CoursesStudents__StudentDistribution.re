@@ -97,8 +97,9 @@ let make = (~studentDistribution, ~params=?, ~href=?) =>
     {let totalStudentsInCourse =
        studentDistribution->(
                               Js.Array.reduce(
-                                ~f=(x, y) =>
-                                  x + DistributionInLevel.studentsInLevel(y),
+                                ~f=
+                                  (x, y) =>
+                                    x + DistributionInLevel.studentsInLevel(y),
                                 ~init=0,
                               )
                             );
@@ -138,11 +139,7 @@ let make = (~studentDistribution, ~params=?, ~href=?) =>
                   <p>
                     {(
                        (ts("percentage") ++ ": ")
-                       ++ percentageStudents->(
-                                                Js.Float.toFixed(
-                                                  ~digits=1,
-                                                )
-                                              )
+                       ++ percentageStudents->(Js.Float.toFixed(~digits=1))
                      )
                      ->str}
                   </p>

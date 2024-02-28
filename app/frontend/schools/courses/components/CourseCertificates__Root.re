@@ -55,14 +55,15 @@ let addCertificate = (state, send, certificate) => {
 let updateCertificate = (state, send, certificate) => {
   let newCertificates =
     Js.Array.map(
-      ~f=c =>
-        if (Certificate.id(c) == Certificate.id(certificate)) {
-          certificate;
-        } else if (Certificate.active(certificate)) {
-          Certificate.markInactive(c);
-        } else {
-          c;
-        },
+      ~f=
+        c =>
+          if (Certificate.id(c) == Certificate.id(certificate)) {
+            certificate;
+          } else if (Certificate.active(certificate)) {
+            Certificate.markInactive(c);
+          } else {
+            c;
+          },
       state.certificates,
     );
   send(UpdateCertificates(newCertificates));

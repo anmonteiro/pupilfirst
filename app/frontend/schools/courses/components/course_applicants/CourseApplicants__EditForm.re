@@ -50,14 +50,11 @@ let updateCourse = (state, send, updateApplicantCB, applicant) => {
 
   CreateStudentFromApplicant.fetch(variables)
   |> Js.Promise.then_((result: CreateStudentFromApplicant.t) => {
-       [@ns.ternary]
-       (
-         if (result.createStudentFromApplicant.success) {
-           updateApplicantCB();
-         } else {
-           send(FailSaving);
-         }
-       );
+       if (result.createStudentFromApplicant.success) {
+         updateApplicantCB();
+       } else {
+         send(FailSaving);
+       };
        Js.Promise.resolve();
      })
   |> Js.Promise.catch(error => {
@@ -99,15 +96,11 @@ let reducer = (state, action) =>
 
 let selectedTabClasses = selected =>
   "flex items-center focus:outline-none justify-center w-1/2 p-3 font-semibold rounded-t-lg leading-relaxed border border-gray-300 text-gray-600 cursor-pointer "
-  ++ [@ns.ternary]
-     (
-       if (selected) {"text-primary-500 bg-white border-b-0"} else {
-         "bg-gray-50"
-       }
-     );
+  ++ (
+    if (selected) {"text-primary-500 bg-white border-b-0"} else {"bg-gray-50"}
+  );
 
-let tabItemsClasses = selected =>
-  [@ns.ternary] (if (selected) {""} else {"hidden"});
+let tabItemsClasses = selected => if (selected) {""} else {"hidden"};
 
 let detailsTab = (state, applicant) =>
   <div>

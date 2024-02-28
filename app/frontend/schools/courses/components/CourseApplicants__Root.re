@@ -117,8 +117,7 @@ let reducer = (state, action) =>
         sortDirection,
       },
     }
-  | 
-    LoadApplicants(endCursor, hasNextPage, newApplicants, totalEntriesCount) =>
+  | LoadApplicants(endCursor, hasNextPage, newApplicants, totalEntriesCount) =>
     let applicants =
       switch (state.loading) {
       | LoadingMore =>
@@ -258,7 +257,6 @@ let loadApplicants = (courseId, state, cursor, send) => {
            response##applicants##nodes,
          );
        send(
-         
          LoadApplicants(
            response##applicants##pageInfo##endCursor,
            response##applicants##pageInfo##hasNextPage,

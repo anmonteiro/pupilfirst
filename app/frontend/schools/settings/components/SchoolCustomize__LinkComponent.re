@@ -28,8 +28,7 @@ let str = React.string;
 let inputClasses = "bg-white border border-gray-400 rounded py-2 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder-gray-500";
 
 let deleteIconClasses = deleting =>
-  [@ns.ternary]
-  (if (deleting) {"fas fa-spinner fa-pulse"} else {"far fa-trash-alt"});
+  if (deleting) {"fas fa-spinner fa-pulse"} else {"far fa-trash-alt"};
 
 module DestroySchoolLinkQuery = [%graphql
   {js|
@@ -196,124 +195,118 @@ let make =
       <div
         className="flex justify-between items-center gap-8 bg-gray-50 text-xs text-gray-900 border rounded mt-2">
         <div className="flex items-center flex-1">
-          {[@ns.ternary]
-           (
-             if (state.editing) {
-               <LinkEditor state id kind send />;
-             } else {
-               <div className="pl-3">
-                 {switch (kind) {
-                  | HeaderLink
-                  | FooterLink =>
-                    <>
-                      <span className="inline-block mr-2 font-semibold">
-                        title->str
-                      </span>
-                      <PfIcon className="if i-link-regular if-fw mr-1" />
-                      <code> url->str </code>
-                    </>
-                  | SocialLink => <code> url->str </code>
-                  }}
-               </div>;
-             }
-           )}
+          {if (state.editing) {
+             <LinkEditor state id kind send />;
+           } else {
+             <div className="pl-3">
+               {switch (kind) {
+                | HeaderLink
+                | FooterLink =>
+                  <>
+                    <span className="inline-block mr-2 font-semibold">
+                      title->str
+                    </span>
+                    <PfIcon className="if i-link-regular if-fw mr-1" />
+                    <code> url->str </code>
+                  </>
+                | SocialLink => <code> url->str </code>
+                }}
+             </div>;
+           }}
         </div>
         <div>
-          {[@ns.ternary]
-           (
-             if (state.editing) {
-               <div>
-                 <button
-                   ariaLabel={(t("cancel_editing") ++ " ") ++ title}
-                   title={t("cancel_editing")}
-                   onClick={_e => {
-                     send(SetEditing(false));
-                     send(UpdateTitle(title));
-                     send(UpdateUrl(url));
-                     send(SetError(url |> UrlUtils.isInvalid(false)));
-                   }}
-                   className="p-3 hover:text-primary-500 hover:bg-primary-50 focus:bg-primary-50 focus:text-primary-500 ">
-                   <PfIcon className="if i-times-solid if-fw text-base" />
-                 </button>
-                 <button
-                   ariaLabel={(ts("update") ++ " ") ++ url}
-                   title={ts("update")}
-                   disabled={state.error}
-                   onClick={_e =>
-                     if (!state.error) {
-                       handleLinkEdit(
-                         ~send,
-                         ~id,
-                         ~updateLinkCB,
-                         ~title=state.title,
-                         ~url=state.url,
-                       );
-                     }
-                   }
-                   className="p-3 hover:text-primary-500 hover:bg-primary-50 focus:bg-primary-50 focus:text-primary-500">
-                   <FaIcon classes="fas fa-check" />
-                 </button>
-               </div>;
-             } else {
-               <div>
-                 <button
-                   ariaLabel={(t("move_down") ++ " ") ++ url}
-                   title={t("move_down")}
-                   onClick={_e =>
-                     handleMoveLink(
-                       ~id,
-                       ~kind,
-                       ~direction=Down,
-                       ~moveLinkCB,
+          {if (state.editing) {
+             <div>
+               <button
+                 ariaLabel={(t("cancel_editing") ++ " ") ++ title}
+                 title={t("cancel_editing")}
+                 onClick={_e => {
+                   send(SetEditing(false));
+                   send(UpdateTitle(title));
+                   send(UpdateUrl(url));
+                   send(SetError(url |> UrlUtils.isInvalid(false)));
+                 }}
+                 className="p-3 hover:text-primary-500 hover:bg-primary-50 focus:bg-primary-50 focus:text-primary-500 ">
+                 <PfIcon className="if i-times-solid if-fw text-base" />
+               </button>
+               <button
+                 ariaLabel={(ts("update") ++ " ") ++ url}
+                 title={ts("update")}
+                 disabled={state.error}
+                 onClick={_e =>
+                   if (!state.error) {
+                     handleLinkEdit(
                        ~send,
-                     )
-                   }
-                   disabled={index == total - 1}
-                   className="p-3 hover:text-primary-500 hover:bg-primary-50 focus:bg-primary-50 focus:text-primary-500">
-                   <FaIcon classes="fas fa-arrow-down" />
-                 </button>
-                 <button
-                   ariaLabel={(t("move_up") ++ " ") ++ url}
-                   title={t("move_up")}
-                   disabled={index == 0}
-                   onClick={_e =>
-                     handleMoveLink(
                        ~id,
-                       ~kind,
-                       ~direction=Up,
-                       ~moveLinkCB,
-                       ~send,
-                     )
+                       ~updateLinkCB,
+                       ~title=state.title,
+                       ~url=state.url,
+                     );
                    }
-                   className="p-3 hover:text-primary-500 hover:bg-primary-50 focus:bg-primary-50 focus:text-primary-500">
-                   <FaIcon classes="fas fa-arrow-up" />
-                 </button>
-                 <button
-                   ariaLabel={(ts("edit") ++ " ") ++ url}
-                   title={ts("edit")}
-                   onClick={_e => send(SetEditing(true))}
-                   className="p-3 hover:text-primary-500 hover:bg-primary-50 focus:bg-primary-50 focus:text-primary-500">
-                   <FaIcon classes="fas fa-edit" />
-                 </button>
-                 <button
-                   ariaLabel={(ts("delete") ++ " ") ++ url}
-                   title={ts("delete")}
-                   onClick={handleDelete(
-                     deleting,
-                     disableDeleteCB,
-                     removeLinkCB,
-                     id,
+                 }
+                 className="p-3 hover:text-primary-500 hover:bg-primary-50 focus:bg-primary-50 focus:text-primary-500">
+                 <FaIcon classes="fas fa-check" />
+               </button>
+             </div>;
+           } else {
+             <div>
+               <button
+                 ariaLabel={(t("move_down") ++ " ") ++ url}
+                 title={t("move_down")}
+                 onClick={_e =>
+                   handleMoveLink(
+                     ~id,
+                     ~kind,
+                     ~direction=Down,
+                     ~moveLinkCB,
+                     ~send,
+                   )
+                 }
+                 disabled={index == total - 1}
+                 className="p-3 hover:text-primary-500 hover:bg-primary-50 focus:bg-primary-50 focus:text-primary-500">
+                 <FaIcon classes="fas fa-arrow-down" />
+               </button>
+               <button
+                 ariaLabel={(t("move_up") ++ " ") ++ url}
+                 title={t("move_up")}
+                 disabled={index == 0}
+                 onClick={_e =>
+                   handleMoveLink(
+                     ~id,
+                     ~kind,
+                     ~direction=Up,
+                     ~moveLinkCB,
+                     ~send,
+                   )
+                 }
+                 className="p-3 hover:text-primary-500 hover:bg-primary-50 focus:bg-primary-50 focus:text-primary-500">
+                 <FaIcon classes="fas fa-arrow-up" />
+               </button>
+               <button
+                 ariaLabel={(ts("edit") ++ " ") ++ url}
+                 title={ts("edit")}
+                 onClick={_e => send(SetEditing(true))}
+                 className="p-3 hover:text-primary-500 hover:bg-primary-50 focus:bg-primary-50 focus:text-primary-500">
+                 <FaIcon classes="fas fa-edit" />
+               </button>
+               <button
+                 ariaLabel={(ts("delete") ++ " ") ++ url}
+                 title={ts("delete")}
+                 onClick={handleDelete(
+                   deleting,
+                   disableDeleteCB,
+                   removeLinkCB,
+                   id,
+                 )}
+                 className="p-3 hover:text-red-500 hover:bg-red-50 focus:bg-red-50 focus:text-red-500">
+                 <FaIcon
+                   classes={deleteIconClasses(
+                     deleting->(Js.Array.includes(~value=id)),
                    )}
-                   className="p-3 hover:text-red-500 hover:bg-red-50 focus:bg-red-50 focus:text-red-500">
-                   <FaIcon
-                     classes={deleteIconClasses(
-                       deleting->(Js.Array.includes(~value=id)),
-                     )}
-                   />
-                 </button>
-               </div>;
-             }
-           )}
+                 />
+               </button>
+             </div>;
+           }}
         </div>
       </div>
     </Spread>

@@ -29,7 +29,6 @@ let contents = (courses, currentCourse, coursePage, selectedPage) =>
 
         if (Page.useSPA(
               selectedPage,
-              
               Page.SelectedCourse(Course.id(course), nextPage),
             )) {
           <Link key={Course.id(course)} href className=classes>

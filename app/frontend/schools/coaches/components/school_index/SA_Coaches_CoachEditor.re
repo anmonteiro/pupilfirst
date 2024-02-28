@@ -81,7 +81,6 @@ let updateTitle = (send, title) =>
   send(UpdateTitle(title, title |> nameOrTitleInvalid));
 let updateConnectLink = (send, connectLink) =>
   send(
-    
     UpdateConnectLink(connectLink, connectLink |> UrlUtils.isInvalid(true)),
   );
 let booleanButtonClasses = selected => {

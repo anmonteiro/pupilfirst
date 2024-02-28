@@ -210,13 +210,14 @@ let createCourse = (state, send, reloadCoursesCB) => {
   send(StartSaving);
   let highlights =
     Js.Array.map(
-      ~f=h =>
-        CreateCourseQuery.makeInputObjectCourseHighlightInput(
-          ~title=Course.Highlight.title(h),
-          ~icon=Course.Highlight.icon(h),
-          ~description=Course.Highlight.description(h),
-          (),
-        ),
+      ~f=
+        h =>
+          CreateCourseQuery.makeInputObjectCourseHighlightInput(
+            ~title=Course.Highlight.title(h),
+            ~icon=Course.Highlight.icon(h),
+            ~description=Course.Highlight.description(h),
+            (),
+          ),
       state.highlights,
     );
   let variables =
@@ -257,13 +258,14 @@ let updateCourse = (state, send, updateCourseCB, course) => {
   send(StartSaving);
   let highlights =
     Js.Array.map(
-      ~f=h =>
-        UpdateCourseQuery.makeInputObjectCourseHighlightInput(
-          ~title=Course.Highlight.title(h),
-          ~icon=Course.Highlight.icon(h),
-          ~description=Course.Highlight.description(h),
-          (),
-        ),
+      ~f=
+        h =>
+          UpdateCourseQuery.makeInputObjectCourseHighlightInput(
+            ~title=Course.Highlight.title(h),
+            ~icon=Course.Highlight.icon(h),
+            ~description=Course.Highlight.description(h),
+            (),
+          ),
       state.highlights,
     );
   let variables =

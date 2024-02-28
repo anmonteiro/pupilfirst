@@ -153,7 +153,6 @@ let make = (~customizations, ~updateAddressCB, ~updateEmailAddressCB) => {
           placeholder={t("email_address_placeholder")}
           onChange={handleInputChange(emailAddress =>
             send(
-              
               UpdateEmailAddress(
                 emailAddress,
                 emailAddress |> EmailUtils.isInvalid(true),

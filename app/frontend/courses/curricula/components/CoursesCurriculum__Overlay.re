@@ -104,18 +104,21 @@ let tabClasses = (selection, tab) =>
   );
 let scrollCompleteButtonIntoViewEventually = () =>
   Js.Global.setTimeout(
-    ~f=() => {
-      let element =
-        Webapi.Dom.document
-        |> Webapi.Dom.Document.getElementById("auto-verify-target");
-      switch (element) {
-      | Some(e) =>
-        Webapi.Dom.Element.scrollIntoView(e);
-        e->(Webapi.Dom.Element.setClassName("mt-4 complete-button-selected"));
-      | None =>
-        Rollbar.error("Could not find the 'Complete' button to scroll to.")
-      };
-    },
+    ~f=
+      () => {
+        let element =
+          Webapi.Dom.document
+          |> Webapi.Dom.Document.getElementById("auto-verify-target");
+        switch (element) {
+        | Some(e) =>
+          Webapi.Dom.Element.scrollIntoView(e);
+          e->(
+               Webapi.Dom.Element.setClassName("mt-4 complete-button-selected")
+             );
+        | None =>
+          Rollbar.error("Could not find the 'Complete' button to scroll to.")
+        };
+      },
     50,
   )
   |> ignore;

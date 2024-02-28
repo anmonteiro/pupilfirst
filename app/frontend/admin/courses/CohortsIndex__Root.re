@@ -36,8 +36,7 @@ let reducer = (state, action) =>
   switch (action) {
   | UnsetSearchString => {...state, filterInput: ""}
   | UpdateFilterInput(filterInput) => {...state, filterInput}
-  | 
-    LoadCohorts(endCursor, hasNextPage, students, totalEntriesCount) =>
+  | LoadCohorts(endCursor, hasNextPage, students, totalEntriesCount) =>
     let updatedStudent =
       switch (state.loading) {
       | LoadingMore =>
@@ -91,7 +90,6 @@ let getCohorts = (send, courseId, cursor, params) => {
   |> CourseCohortsQuery.fetch
   |> Js.Promise.then_((response: CourseCohortsQuery.t) => {
        send(
-         
          LoadCohorts(
            response.cohorts.pageInfo.endCursor,
            response.cohorts.pageInfo.hasNextPage,

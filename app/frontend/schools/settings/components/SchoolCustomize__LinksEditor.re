@@ -77,8 +77,7 @@ let handleDelete = (state, send, removeLinkCB, id, event) => {
 };
 
 let deleteIconClasses = deleting =>
-  [@ns.ternary]
-  (if (deleting) {"fas fa-spinner fa-pulse"} else {"far fa-trash-alt"});
+  if (deleting) {"fas fa-spinner fa-pulse"} else {"far fa-trash-alt"};
 
 let titleInputVisible = state =>
   switch (state.kind) {
@@ -90,25 +89,21 @@ let titleInputVisible = state =>
 let kindClasses = selected => {
   let classes = "nav-tab-item border-t cursor-pointer w-1/3 appearance-none flex justify-center items-center w-full text-sm text-center text-gray-800 bg-white hover:bg-gray-50 hover:text-gray-900 py-3 px-4 font-semibold leading-tight focus:outline-none focus:bg-gray-50 focus:text-gray-900";
   classes
-  ++ [@ns.ternary]
-     (
-       if (selected) {
-         " nav-tab-item--selected text-primary-500 bg-white hover:bg-white hover:text-primary-500"
-       } else {
-         " text-gray-600"
-       }
-     );
+  ++ (
+    if (selected) {
+      " nav-tab-item--selected text-primary-500 bg-white hover:bg-white hover:text-primary-500"
+    } else {
+      " text-gray-600"
+    }
+  );
 };
 
 let addLinkText = adding =>
-  [@ns.ternary]
-  (
-    if (adding) {
-      t("adding_new_link");
-    } else {
-      t("add_new_link");
-    }
-  );
+  if (adding) {
+    t("adding_new_link");
+  } else {
+    t("add_new_link");
+  };
 
 let addLinkDisabled = (state: state) =>
   if (state.adding) {

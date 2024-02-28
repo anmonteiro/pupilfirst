@@ -123,8 +123,7 @@ let reducer = (state, action) =>
   | BeginLoadingMore => {...state, loading: LoadingMore}
   | BeginReloading => {...state, loading: Reloading}
   | UpdateFilterString(filterString) => {...state, filterString}
-  | 
-    LoadCourses(endCursor, hasNextPage, newCourses, totalEntriesCount) =>
+  | LoadCourses(endCursor, hasNextPage, newCourses, totalEntriesCount) =>
     let courses =
       switch (state.loading) {
       | LoadingMore =>
@@ -153,9 +152,12 @@ let loadCourses = (state, cursor, send) => {
   |> Js.Promise.then_((response: CoursesInfoQuery.t) => {
        let courses =
          response.courses.nodes
-         ->(Js.Array.map(~f=(c: CoursesInfoQuery.t_courses_nodes) => {id: c.id, name: c.name}));
+         ->(
+             Js.Array.map(~f=(c: CoursesInfoQuery.t_courses_nodes) =>
+               {id: c.id, name: c.name}
+             )
+           );
        send(
-         
          LoadCourses(
            response.courses.pageInfo.endCursor,
            response.courses.pageInfo.hasNextPage,
@@ -237,7 +239,10 @@ let unselected = state => {
 };
 
 let defaultOptions = () =>
-  Js.Array.map(~f=s => Selectable.status(s), [|`Active, `Ended, `Archived|]);
+  Js.Array.map(
+    ~f=s => Selectable.status(s),
+    [|`Active, `Ended, `Archived|],
+  );
 
 let selected = state => {
   let status =

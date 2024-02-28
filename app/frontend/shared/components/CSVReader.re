@@ -1,4 +1,6 @@
-module type CSVData = {type nonrec t;};
+module type CSVData = {
+  type nonrec t;
+};
 
 module Make = (CSVData: CSVData) => {
   [@deriving jsProperties]
@@ -25,16 +27,14 @@ module Make = (CSVData: CSVData) => {
     [@mel.module "react-csv-reader"] [@react.component]
     external make:
       (
-        ~onFileLoaded:  (
-                         (Js.Array.t(CSVData.t), fileInfo) => unit
-                       ),
-        ~label:  string=?,
-        ~inputId:  string=?,
-        ~inputName:  string=?,
-        ~cssClass:  string=?,
-        ~inputStyle:  string=?,
-        ~onError:  (string => unit)=?,
-        ~parserOptions:  parserOptions
+        ~onFileLoaded: (Js.Array.t(CSVData.t), fileInfo) => unit,
+        ~label: string=?,
+        ~inputId: string=?,
+        ~inputName: string=?,
+        ~cssClass: string=?,
+        ~inputStyle: string=?,
+        ~onError: string => unit=?,
+        ~parserOptions: parserOptions
       ) =>
       React.element =
       "default";
@@ -43,16 +43,15 @@ module Make = (CSVData: CSVData) => {
   [@react.component]
   let make =
       (
-        ~ onFileLoaded,
-        ~ cssClass=?,
-        ~ label=?,
-        ~ inputId=?,
-        ~ inputName=?,
-        ~ inputStyle=?,
-        ~ onError=?,
+        ~onFileLoaded,
+        ~cssClass=?,
+        ~label=?,
+        ~inputId=?,
+        ~inputName=?,
+        ~inputStyle=?,
+        ~onError=?,
         ~parserOptions: parserOptions,
       ) =>
-    
     <JsComponent
       onFileLoaded
       ?label

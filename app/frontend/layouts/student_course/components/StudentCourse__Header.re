@@ -4,22 +4,24 @@ let str = React.string;
 let tr = I18n.t(~scope="components.StudentCourse__Header");
 let courseOptions = courses =>
   Js.Array.map(
-    ~f=course => {
-      let courseId = CourseInfo.id(course);
-      <a
-        key={"course-" ++ courseId}
-        href={"/courses/" ++ courseId ++ "/curriculum"}
-        className="cursor-pointer block p-3 text-xs font-semibold text-gray-900 border-b border-gray-50 bg-white hover:text-primary-500 hover:bg-gray-50 whitespace-nowrap">
-        <span> {CourseInfo.name(course)->str} </span>
-      </a>;
-    },
+    ~f=
+      course => {
+        let courseId = CourseInfo.id(course);
+        <a
+          key={"course-" ++ courseId}
+          href={"/courses/" ++ courseId ++ "/curriculum"}
+          className="cursor-pointer block p-3 text-xs font-semibold text-gray-900 border-b border-gray-50 bg-white hover:text-primary-500 hover:bg-gray-50 whitespace-nowrap">
+          <span> {CourseInfo.name(course)->str} </span>
+        </a>;
+      },
     Js.Array.filter(
-      ~f=course =>
-        Belt.Option.mapWithDefault(
-          CourseInfo.endsAt(course),
-          true,
-          DateFns.isFuture,
-        ),
+      ~f=
+        course =>
+          Belt.Option.mapWithDefault(
+            CourseInfo.endsAt(course),
+            true,
+            DateFns.isFuture,
+          ),
       courses,
     ),
   );
@@ -125,30 +127,31 @@ let make = (~currentCourseId, ~courses, ~additionalLinks, ~coverImage) => {
          <div
            className="bg-white border-transparent flex justify-between overflow-x-auto md:overflow-hidden lg:max-w-3xl mx-auto shadow md:rounded-lg mt-0 md:-mt-7 z-10 relative">
            {Js.Array.map(
-              ~f=l => {
-                let (title, suffix) =
-                  switch (l) {
-                  | "curriculum" => (tr("curriculum"), "curriculum")
+              ~f=
+                l => {
+                  let (title, suffix) =
+                    switch (l) {
+                    | "curriculum" => (tr("curriculum"), "curriculum")
 
-                  | "calendar" => (tr("calendar"), "calendar")
+                    | "calendar" => (tr("calendar"), "calendar")
 
-                  | "leaderboard" => (tr("leaderboard"), "leaderboard")
+                    | "leaderboard" => (tr("leaderboard"), "leaderboard")
 
-                  | "review" => (tr("review"), "review")
+                    | "review" => (tr("review"), "review")
 
-                  | "students" => (tr("students"), "students")
+                    | "students" => (tr("students"), "students")
 
-                  | "report" => (tr("report"), "report")
+                    | "report" => (tr("report"), "report")
 
-                  | _unknown => (tr("unknown"), "")
-                  };
-                <a
-                  key=title
-                  href={"/courses/" ++ currentCourseId ++ "/" ++ suffix}
-                  className={tabClasses(url, suffix)}>
-                  title->str
-                </a>;
-              },
+                    | _unknown => (tr("unknown"), "")
+                    };
+                  <a
+                    key=title
+                    href={"/courses/" ++ currentCourseId ++ "/" ++ suffix}
+                    className={tabClasses(url, suffix)}>
+                    title->str
+                  </a>;
+                },
               Js.Array.concat(additionalLinks, ~other=[|"curriculum"|]),
             )
             ->React.array}

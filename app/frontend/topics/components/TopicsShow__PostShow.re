@@ -212,20 +212,21 @@ let navigateToEditor = () => {
   let element =
     Webapi.Dom.document |> Webapi.Dom.Document.getElementById(elementId);
   Js.Global.setTimeout(
-    ~f=() =>
-      switch (element) {
-      | Some(e) =>
-        {
-          Webapi.Dom.Element.scrollIntoView(e);
-          e->(
-               Webapi.Dom.Element.setClassName(
-                 "w-full flex flex-col topics-show__highlighted-item",
-               )
-             );
-        }
-        |> ignore
-      | None => Rollbar.error("Could not find the post to scroll to.")
-      },
+    ~f=
+      () =>
+        switch (element) {
+        | Some(e) =>
+          {
+            Webapi.Dom.Element.scrollIntoView(e);
+            e->(
+                 Webapi.Dom.Element.setClassName(
+                   "w-full flex flex-col topics-show__highlighted-item",
+                 )
+               );
+          }
+          |> ignore
+        | None => Rollbar.error("Could not find the post to scroll to.")
+        },
     50,
   )
   |> ignore;

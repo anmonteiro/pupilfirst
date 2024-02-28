@@ -76,7 +76,6 @@ let levelUpBlockedMessage = (currentLevelNumber, someSubmissionsRejected) => {
     ~title=t(titleKey),
     ~description=prefix ++ body ++ suffix,
     ~notice=
-      
       Notice.LevelUpBlocked(currentLevelNumber, someSubmissionsRejected),
     (),
   );
@@ -94,7 +93,6 @@ let levelUpLimitedMessage = (currentLevelNumber, minimumRequiredLevelNumber) => 
     ~title=t("level_up_limited_title"),
     ~description,
     ~notice=
-      
       Notice.LevelUpLimited(currentLevelNumber, minimumRequiredLevelNumber),
     (),
   );
@@ -119,11 +117,9 @@ let make = (~notice, ~course) =>
   | CourseComplete => courseCompleteMessage()
   | AccessEnded => accessEndedMessage()
   | LevelUp => renderLevelUp(course)
-  | 
-    LevelUpLimited(currentLevelNumber, minimumRequiredLevelNumber) =>
+  | LevelUpLimited(currentLevelNumber, minimumRequiredLevelNumber) =>
     levelUpLimitedMessage(currentLevelNumber, minimumRequiredLevelNumber)
-  | 
-    LevelUpBlocked(currentLevelNumber, someSubmissionsRejected) =>
+  | LevelUpBlocked(currentLevelNumber, someSubmissionsRejected) =>
     levelUpBlockedMessage(currentLevelNumber, someSubmissionsRejected)
   | TeamMembersPending => teamMembersPendingMessage()
   | Nothing => React.null

@@ -115,7 +115,6 @@ let loadCoachStudents = (courseId, coachId, send) =>
          pendingSubmissions: result.coachStats.pendingSubmissions,
        };
        send(
-         
          LoadCoachInfo(
            result.coach.students
            ->(

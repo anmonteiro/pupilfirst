@@ -17,8 +17,9 @@ let selectChecklist = (itemIndex, resultIndex, setSelecton) =>
 let unSelectChecklist = (itemIndex, resultIndex, setSelecton) =>
   setSelecton(selection =>
     Js.Array.filter(
-      ~f=item =>
-        !(item.itemIndex == itemIndex && item.resultIndex == resultIndex),
+      ~f=
+        item =>
+          !(item.itemIndex == itemIndex && item.resultIndex == resultIndex),
       selection,
     )
   );
@@ -179,122 +180,126 @@ let make =
       </div>
       <div className="border bg-white rounded-lg py-2 md:py-4 mt-2 space-y-8">
         {Js.Array.mapi(
-           ~f=(reviewChecklistItem, itemIndex) =>
-             <Spread
-               props={"data-checklist-item": string_of_int(itemIndex)}
-               key={string_of_int(itemIndex)}>
-               <div>
-                 <h4
-                   className="relative text-sm font-semibold mt-2 md:mt-0 px-6 w-full md:w-4/5">
-                   <div
-                     className={checklistItemCheckedClasses(
-                       itemIndex,
-                       selection,
-                     )}
-                   />
-                   {ReviewChecklistItem.title(reviewChecklistItem)->str}
-                 </h4>
-                 <div className="space-y-3 pt-3">
-                   {Js.Array.mapi(
-                      ~f=(checklistItem, resultIndex) =>
-                        <Spread
-                          props={
-                            "data-result-item": string_of_int(resultIndex),
-                          }
-                          key={
-                            string_of_int(itemIndex)
-                            ++ string_of_int(resultIndex)
-                          }>
-                          <div className="px-6">
-                            <Checkbox
-                              id={
-                                id
-                                ++ itemIndex->string_of_int
-                                ++ resultIndex->string_of_int
+           ~f=
+             (reviewChecklistItem, itemIndex) =>
+               <Spread
+                 props={"data-checklist-item": string_of_int(itemIndex)}
+                 key={string_of_int(itemIndex)}>
+                 <div>
+                   <h4
+                     className="relative text-sm font-semibold mt-2 md:mt-0 px-6 w-full md:w-4/5">
+                     <div
+                       className={checklistItemCheckedClasses(
+                         itemIndex,
+                         selection,
+                       )}
+                     />
+                     {ReviewChecklistItem.title(reviewChecklistItem)->str}
+                   </h4>
+                   <div className="space-y-3 pt-3">
+                     {Js.Array.mapi(
+                        ~f=
+                          (checklistItem, resultIndex) =>
+                            <Spread
+                              props={
+                                "data-result-item":
+                                  string_of_int(resultIndex),
                               }
-                              label={str(
-                                checklistItem->ReviewChecklistResult.title,
-                              )}
-                              onChange={checkboxOnChange(
-                                itemIndex,
-                                resultIndex,
-                                setSelecton,
-                              )}
-                              checked={checklistItemChecked(
-                                itemIndex,
-                                resultIndex,
-                                selection,
-                              )}
-                              disabled={
-                                !
-                                  feedbackGeneratable(
-                                    submissionDetails,
-                                    overlaySubmission,
-                                  )
-                              }
-                            />
-                            {let isSelected =
-                               Js.Array.find(
-                                 ~f=s =>
-                                   s.itemIndex == itemIndex
-                                   && s.resultIndex == resultIndex,
-                                 selection,
-                               )
-                               ->Belt.Option.isSome;
+                              key={
+                                string_of_int(itemIndex)
+                                ++ string_of_int(resultIndex)
+                              }>
+                              <div className="px-6">
+                                <Checkbox
+                                  id={
+                                    id
+                                    ++ itemIndex->string_of_int
+                                    ++ resultIndex->string_of_int
+                                  }
+                                  label={str(
+                                    checklistItem->ReviewChecklistResult.title,
+                                  )}
+                                  onChange={checkboxOnChange(
+                                    itemIndex,
+                                    resultIndex,
+                                    setSelecton,
+                                  )}
+                                  checked={checklistItemChecked(
+                                    itemIndex,
+                                    resultIndex,
+                                    selection,
+                                  )}
+                                  disabled={
+                                    !
+                                      feedbackGeneratable(
+                                        submissionDetails,
+                                        overlaySubmission,
+                                      )
+                                  }
+                                />
+                                {let isSelected =
+                                   Js.Array.find(
+                                     ~f=
+                                       s =>
+                                         s.itemIndex == itemIndex
+                                         && s.resultIndex == resultIndex,
+                                     selection,
+                                   )
+                                   ->Belt.Option.isSome;
 
-                             ReactUtils.nullUnless(
-                               <div className="pl-7 pt-2">
-                                 <textarea
-                                   rows=4
-                                   cols=33
-                                   className="appearance-none border border-gray-300 bg-white rounded-b text-sm align-top py-2 px-4 leading-relaxed w-full focus:outline-none focus:bg-white focus:border-primary-300"
-                                   id={
-                                     "result_"
-                                     ++ resultIndex->string_of_int
-                                     ++ "_feedback"
-                                   }
-                                   type_="text"
-                                   placeholder={t("feedback_placeholder")}
-                                   disabled={
-                                     !
-                                       feedbackGeneratable(
-                                         submissionDetails,
-                                         overlaySubmission,
-                                       )
-                                   }
-                                   value={Belt.Option.getWithDefault(
-                                     ReviewChecklistResult.feedback(
-                                       checklistItem,
-                                     ),
-                                     "",
-                                   )}
-                                   onChange={event =>
-                                     updateChecklistResultFeedback(
-                                       itemIndex,
-                                       resultIndex,
-                                       React.Event.Form.target(event)##value,
-                                       reviewChecklistItem,
-                                       checklistItem,
-                                       setChecklist,
-                                     )
-                                   }
-                                 />
-                               </div>,
-                               isSelected
-                               || !
-                                    feedbackGeneratable(
-                                      submissionDetails,
-                                      overlaySubmission,
-                                    ),
-                             )}
-                          </div>
-                        </Spread>,
-                      ReviewChecklistItem.result(reviewChecklistItem),
-                    )
-                    ->React.array}
+                                 ReactUtils.nullUnless(
+                                   <div className="pl-7 pt-2">
+                                     <textarea
+                                       rows=4
+                                       cols=33
+                                       className="appearance-none border border-gray-300 bg-white rounded-b text-sm align-top py-2 px-4 leading-relaxed w-full focus:outline-none focus:bg-white focus:border-primary-300"
+                                       id={
+                                         "result_"
+                                         ++ resultIndex->string_of_int
+                                         ++ "_feedback"
+                                       }
+                                       type_="text"
+                                       placeholder={t("feedback_placeholder")}
+                                       disabled={
+                                         !
+                                           feedbackGeneratable(
+                                             submissionDetails,
+                                             overlaySubmission,
+                                           )
+                                       }
+                                       value={Belt.Option.getWithDefault(
+                                         ReviewChecklistResult.feedback(
+                                           checklistItem,
+                                         ),
+                                         "",
+                                       )}
+                                       onChange={event =>
+                                         updateChecklistResultFeedback(
+                                           itemIndex,
+                                           resultIndex,
+                                           React.Event.Form.target(event)##value,
+                                           reviewChecklistItem,
+                                           checklistItem,
+                                           setChecklist,
+                                         )
+                                       }
+                                     />
+                                   </div>,
+                                   isSelected
+                                   || !
+                                        feedbackGeneratable(
+                                          submissionDetails,
+                                          overlaySubmission,
+                                        ),
+                                 )}
+                              </div>
+                            </Spread>,
+                        ReviewChecklistItem.result(reviewChecklistItem),
+                      )
+                      ->React.array}
+                   </div>
                  </div>
-               </div>
-             </Spread>,
+               </Spread>,
            checklist,
          )
          ->React.array}

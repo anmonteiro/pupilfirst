@@ -136,7 +136,8 @@ let getTeams = (send, courseId, cursor, params) => {
                    ~students=
                      t.students
                      ->(
-                         Js.Array.map(~f=(s: CourseTeamsQuery.t_teams_nodes_students) =>
+                         Js.Array.map(
+                           ~f=(s: CourseTeamsQuery.t_teams_nodes_students) =>
                            UserProxy.make(
                              ~id=s.id,
                              ~name=s.user.name,

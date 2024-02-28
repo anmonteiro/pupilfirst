@@ -60,7 +60,8 @@ let loadStudentsData = (courseId, cohort, send) => {
          SetBaseData(
            response.courseStudents.nodes
            ->(
-               Js.Array.map(~f=(s: StudentsPickerInfoQuery.t_courseStudents_nodes) =>
+               Js.Array.map(
+                 ~f=(s: StudentsPickerInfoQuery.t_courseStudents_nodes) =>
                  UserProxy.make(
                    ~id=s.id,
                    ~name=s.user.name,

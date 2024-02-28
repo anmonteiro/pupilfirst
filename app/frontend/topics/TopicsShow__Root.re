@@ -274,26 +274,28 @@ let topicCategorySelector =
     Belt.Option.mapWithDefault(
       selectedTopicCategory, availableTopicCategories, topicCategory =>
       Js.Array.filter(
-        ~f=availableTopicCategory =>
-          TopicCategory.id(availableTopicCategory)
-          != TopicCategory.id(topicCategory),
+        ~f=
+          availableTopicCategory =>
+            TopicCategory.id(availableTopicCategory)
+            != TopicCategory.id(topicCategory),
         availableTopicCategories,
       )
     );
   let topicCategoryList =
     Js.Array.map(
-      ~f=topicCategory => {
-        let (color, _) = TopicCategory.color(topicCategory);
-        let style = ReactDOM.Style.make(~backgroundColor=color, ());
-        let categoryName = TopicCategory.name(topicCategory);
-        <div
-          ariaLabel={(t("select_category") ++ " ") ++ categoryName}
-          className="px-3 py-2 font-normal flex items-center"
-          onClick={_ => send(UpdateTopicCategory(Some(topicCategory)))}>
-          <div className="w-3 h-3 rounded mt-px" style />
-          <span className="ml-2"> categoryName->str </span>
-        </div>;
-      },
+      ~f=
+        topicCategory => {
+          let (color, _) = TopicCategory.color(topicCategory);
+          let style = ReactDOM.Style.make(~backgroundColor=color, ());
+          let categoryName = TopicCategory.name(topicCategory);
+          <div
+            ariaLabel={(t("select_category") ++ " ") ++ categoryName}
+            className="px-3 py-2 font-normal flex items-center"
+            onClick={_ => send(UpdateTopicCategory(Some(topicCategory)))}>
+            <div className="w-3 h-3 rounded mt-px" style />
+            <span className="ml-2"> categoryName->str </span>
+          </div>;
+        },
       selectableTopicCategories,
     );
   switch (selectedTopicCategory) {

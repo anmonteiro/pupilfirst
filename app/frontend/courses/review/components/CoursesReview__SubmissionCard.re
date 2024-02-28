@@ -50,102 +50,105 @@ let submissionCardClasses = submission =>
 let showSubmission = (submissions, filterString) =>
   <div id="submissions">
     {Js.Array.map(
-       ~f=submission =>
-         <Link
-           key={IndexSubmission.id(submission)}
-           props={"data-submission-id": IndexSubmission.id(submission)}
-           href={
-             (
-               ({js|/submissions/|js} ++ IndexSubmission.id(submission))
-               ++ {js|/review?|js}
-             )
-             ++ filterString
-           }
-           ariaLabel={
-             (
-               ("Submission " ++ IndexSubmission.id(submission))
-               ++ ", Submitted by: "
-             )
-             ++ IndexSubmission.userNames(submission)
-           }
-           className={submissionCardClasses(submission)}>
-           <div className="w-full lg:w-8/12">
-             <div className="block text-sm lg:pr-4">
-               <span
-                 className="bg-gray-300 text-xs font-semibold px-2 py-px rounded">
-                 {str(
-                    t("level")
-                    ++ string_of_int(IndexSubmission.levelNumber(submission)),
-                  )}
-               </span>
-               <span className="ml-2 font-semibold text-sm md:text-base">
-                 {IndexSubmission.title(submission)->str}
-               </span>
+       ~f=
+         submission =>
+           <Link
+             key={IndexSubmission.id(submission)}
+             props={"data-submission-id": IndexSubmission.id(submission)}
+             href={
+               (
+                 ({js|/submissions/|js} ++ IndexSubmission.id(submission))
+                 ++ {js|/review?|js}
+               )
+               ++ filterString
+             }
+             ariaLabel={
+               (
+                 ("Submission " ++ IndexSubmission.id(submission))
+                 ++ ", Submitted by: "
+               )
+               ++ IndexSubmission.userNames(submission)
+             }
+             className={submissionCardClasses(submission)}>
+             <div className="w-full lg:w-8/12">
+               <div className="block text-sm lg:pr-4">
+                 <span
+                   className="bg-gray-300 text-xs font-semibold px-2 py-px rounded">
+                   {str(
+                      t("level")
+                      ++ string_of_int(
+                           IndexSubmission.levelNumber(submission),
+                         ),
+                    )}
+                 </span>
+                 <span className="ml-2 font-semibold text-sm md:text-base">
+                   {IndexSubmission.title(submission)->str}
+                 </span>
+               </div>
+               <div className="mt-1 ml-px text-xs text-gray-900">
+                 {switch (IndexSubmission.teamName(submission)) {
+                  | Some(name) =>
+                    <span>
+                      {str(t("submitted_by_team"))}
+                      <span className="font-semibold"> {str(name)} </span>
+                    </span>
+                  | None =>
+                    <span>
+                      {str(t("submitted_by"))}
+                      <span className="font-semibold">
+                        {IndexSubmission.userNames(submission)->str}
+                      </span>
+                    </span>
+                  }}
+                 <span
+                   className="ml-1"
+                   title={
+                     IndexSubmission.createdAt(submission)
+                     ->(DateFns.formatPreset(~year=true, ~time=true, ()))
+                   }>
+                   {t(
+                      ~variables=[|
+                        (
+                          "created_at",
+                          IndexSubmission.createdAtPretty(submission),
+                        ),
+                      |],
+                      "created_at",
+                    )
+                    ->str}
+                 </span>
+                 {switch (IndexSubmission.reviewer(submission)) {
+                  | Some(reviewer) =>
+                    <span className="ml-1">
+                      {str(t("assigned_to"))}
+                      <span className="ml-1 font-semibold">
+                        {IndexSubmission.reviewerName(reviewer)->str}
+                      </span>
+                      <span
+                        className="text-xs text-gray-800 ml-1"
+                        title={
+                          IndexSubmission.reviewerAssignedAt(reviewer)
+                          ->(DateFns.formatPreset(~year=true, ~time=true, ()))
+                        }>
+                        {DateFns.formatDistanceToNow(
+                           IndexSubmission.reviewerAssignedAt(reviewer),
+                           ~addSuffix=true,
+                           (),
+                         )
+                         ->str}
+                        {str(".")}
+                      </span>
+                    </span>
+                  | None => React.null
+                  }}
+               </div>
              </div>
-             <div className="mt-1 ml-px text-xs text-gray-900">
-               {switch (IndexSubmission.teamName(submission)) {
-                | Some(name) =>
-                  <span>
-                    {str(t("submitted_by_team"))}
-                    <span className="font-semibold"> {str(name)} </span>
-                  </span>
-                | None =>
-                  <span>
-                    {str(t("submitted_by"))}
-                    <span className="font-semibold">
-                      {IndexSubmission.userNames(submission)->str}
-                    </span>
-                  </span>
-                }}
-               <span
-                 className="ml-1"
-                 title={
-                   IndexSubmission.createdAt(submission)
-                   ->(DateFns.formatPreset(~year=true, ~time=true, ()))
-                 }>
-                 {t(
-                    ~variables=[|
-                      (
-                        "created_at",
-                        IndexSubmission.createdAtPretty(submission),
-                      ),
-                    |],
-                    "created_at",
-                  )
-                  ->str}
-               </span>
-               {switch (IndexSubmission.reviewer(submission)) {
-                | Some(reviewer) =>
-                  <span className="ml-1">
-                    {str(t("assigned_to"))}
-                    <span className="ml-1 font-semibold">
-                      {IndexSubmission.reviewerName(reviewer)->str}
-                    </span>
-                    <span
-                      className="text-xs text-gray-800 ml-1"
-                      title={
-                        IndexSubmission.reviewerAssignedAt(reviewer)
-                        ->(DateFns.formatPreset(~year=true, ~time=true, ()))
-                      }>
-                      {DateFns.formatDistanceToNow(
-                         IndexSubmission.reviewerAssignedAt(reviewer),
-                         ~addSuffix=true,
-                         (),
-                       )
-                       ->str}
-                      {str(".")}
-                    </span>
-                  </span>
-                | None => React.null
-                }}
+             <div
+               className="w-auto lg:w-4/12 text-xs flex justify-end mt-2 lg:mt-0">
+               {feedbackSentNotice(IndexSubmission.feedbackSent(submission))}
+               {submissionStatus(submission)}
              </div>
-           </div>
-           <div
-             className="w-auto lg:w-4/12 text-xs flex justify-end mt-2 lg:mt-0">
-             {feedbackSentNotice(IndexSubmission.feedbackSent(submission))}
-             {submissionStatus(submission)}
-           </div>
-         </Link>,
+           </Link>,
        submissions,
      )
      ->React.array}

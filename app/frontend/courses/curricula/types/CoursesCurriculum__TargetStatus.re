@@ -91,7 +91,9 @@ let compute =
              |> Level.number;
            let submission =
              submissions
-             |> Js.Array.find(~f=s => s |> LatestSubmission.targetId == targetId);
+             |> Js.Array.find(~f=s =>
+                  s |> LatestSubmission.targetId == targetId
+                );
            let submissionStatus =
              switch (submission) {
              | Some(s) =>
@@ -178,7 +180,10 @@ let canSubmit = (~resubmittable, t) =>
   };
 let allAttempted = ts =>
   Belt.Array.every(ts, t =>
-    Js.Array.includes(~value=t.status, [|PendingReview, Completed, Rejected|])
+    Js.Array.includes(
+      ~value=t.status,
+      [|PendingReview, Completed, Rejected|],
+    )
   );
 let allComplete = ts => Belt.Array.every(ts, t => t.status == Completed);
 let anyRejected = ts => Belt.Array.some(ts, t => t.status == Rejected);

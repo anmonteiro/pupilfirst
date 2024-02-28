@@ -21,7 +21,6 @@ type t =
   | FullyLoaded(data)
 and cursor = string;
 let partiallyLoaded = (~submissions, ~filter, ~sortDirection, ~cursor) =>
-  
   PartiallyLoaded({submissions, filter, sortDirection}, cursor);
 let fullyLoaded = (~submissions, ~filter, ~sortDirection) =>
   FullyLoaded({submissions, filter, sortDirection});

@@ -94,7 +94,7 @@ let decode = json => {
     | "embed" =>
       let (url, embedCode, requestSource, lastResolvedAt) =
         json |> field("content", decodeEmbedContent);
-       Embed(url, embedCode, requestSource, lastResolvedAt);
+      Embed(url, embedCode, requestSource, lastResolvedAt);
     | "audio" =>
       let title = field("content", decodeFileContent, json);
       let url = field("fileUrl", string, json);
@@ -130,9 +130,8 @@ let makeFromJs = js => {
     switch (js##content) {
     | `MarkdownBlock(content) => Markdown(content##markdown)
     | `FileBlock(content) =>
-       File(content##url, content##title, content##filename)
+      File(content##url, content##title, content##filename)
     | `ImageBlock(content) =>
-      
       Image(
         content##url,
         content##caption,
@@ -145,7 +144,6 @@ let makeFromJs = js => {
         },
       )
     | `EmbedBlock(content) =>
-      
       Embed(
         content##url,
         content##embedCode,
@@ -153,7 +151,7 @@ let makeFromJs = js => {
         content##lastResolvedAt->(Belt.Option.map(DateFns.parseISO)),
       )
     | `AudioBlock(content) =>
-       Audio(content##url, content##title, content##filename)
+      Audio(content##url, content##title, content##filename)
     };
   make(id, blockType, sortIndex);
 };

@@ -214,7 +214,8 @@ let getNextSubmission = (send, courseId, filter, submissionId) => {
        } else {
          ReasonReactRouter.push(
            (
-             ("/submissions/" ++ response##submissions##nodes[0]##id) ++ "/review?"
+             ("/submissions/" ++ response##submissions##nodes[0]##id)
+             ++ "/review?"
            )
            ++ Filter.toQueryString(filter),
          );
@@ -298,20 +299,21 @@ let undoGrading = (submissionId, send) => {
 
 let passed = (grades, evaluationCriteria) =>
   Js.Array.filter(
-    ~f=g => {
-      let passGrade =
-        EvaluationCriterion.passGrade(
-          ArrayUtils.unsafeFind(
-            ec =>
-              EvaluationCriterion.id(ec) == Grade.evaluationCriterionId(g),
-            "CoursesReview__Editor: Unable to find evaluation criterion with id - "
-            ++ Grade.evaluationCriterionId(g),
-            evaluationCriteria,
-          ),
-        );
+    ~f=
+      g => {
+        let passGrade =
+          EvaluationCriterion.passGrade(
+            ArrayUtils.unsafeFind(
+              ec =>
+                EvaluationCriterion.id(ec) == Grade.evaluationCriterionId(g),
+              "CoursesReview__Editor: Unable to find evaluation criterion with id - "
+              ++ Grade.evaluationCriterionId(g),
+              evaluationCriteria,
+            ),
+          );
 
-      Grade.value(g) < passGrade;
-    },
+        Grade.value(g) < passGrade;
+      },
     grades,
   )
   ->ArrayUtils.isEmpty;
@@ -343,12 +345,13 @@ let gradeSubmissionQuery =
 
   let grades =
     Js.Array.map(
-      ~f=g =>
-        CreateGradingMutation.makeInputObjectGradeInput(
-          ~evaluationCriterionId=Grade.evaluationCriterionId(g),
-          ~grade=Grade.value(g),
-          (),
-        ),
+      ~f=
+        g =>
+          CreateGradingMutation.makeInputObjectGradeInput(
+            ~evaluationCriterionId=Grade.evaluationCriterionId(g),
+            ~grade=Grade.value(g),
+            (),
+          ),
       state.grades,
     );
 
@@ -554,18 +557,21 @@ let headerSection =
                SubmissionDetails.students(submissionDetails)->Array.length;
 
              Js.Array.mapi(
-               ~f=(student, index) => {
-                 let commaRequired = index + 1 != studentCount;
-                 <span key={Student.id(student)}>
-                   <a
-                     className="font-semibold underline focus:ring-2 focus:ring-offset-2 focus:ring-focusColor-500"
-                     href={("/students/" ++ Student.id(student)) ++ "/report"}
-                     target="_blank">
-                     {Student.name(student)->str}
-                   </a>
-                   (if (commaRequired) {", "} else {""})->str
-                 </span>;
-               },
+               ~f=
+                 (student, index) => {
+                   let commaRequired = index + 1 != studentCount;
+                   <span key={Student.id(student)}>
+                     <a
+                       className="font-semibold underline focus:ring-2 focus:ring-offset-2 focus:ring-focusColor-500"
+                       href={
+                         ("/students/" ++ Student.id(student)) ++ "/report"
+                       }
+                       target="_blank">
+                       {Student.name(student)->str}
+                     </a>
+                     (if (commaRequired) {", "} else {""})->str
+                   </span>;
+                 },
                SubmissionDetails.students(submissionDetails),
              )
              ->React.array}
@@ -597,12 +603,14 @@ let updateGrading = (grade, state, send) => {
   let newGrades =
     Js.Array.concat(
       [|grade|],
-      ~other=Js.Array.filter(
-        ~f=g =>
-          Grade.evaluationCriterionId(g)
-          != Grade.evaluationCriterionId(grade),
-        state.grades,
-      ),
+      ~other=
+        Js.Array.filter(
+          ~f=
+            g =>
+              Grade.evaluationCriterionId(g)
+              != Grade.evaluationCriterionId(grade),
+          state.grades,
+        ),
     );
 
   send(UpdateGrades(newGrades));
@@ -1222,47 +1230,48 @@ let feedbackGenerator =
 let showFeedback = feedback =>
   <div className="divide-y space-y-6 md:ml-8">
     {Js.Array.mapi(
-       ~f=(f, index) =>
-         <Spread
-           props={"data-title": "feedback-section"}
-           key={index->string_of_int}>
-           <div>
-             <div className="pt-6">
-               <div className="flex">
-                 <div
-                   className="shrink-0 w-10 h-10 bg-gray-300 rounded-full overflow-hidden mr-4 object-cover">
-                   {switch (Feedback.coachAvatarUrl(f)) {
-                    | Some(avatarUrl) => <img src=avatarUrl />
-                    | None => <Avatar name={Feedback.coachName(f)} />
-                    }}
-                 </div>
-                 <div>
-                   <div className="flex flex-col md:flex-row">
+       ~f=
+         (f, index) =>
+           <Spread
+             props={"data-title": "feedback-section"}
+             key={index->string_of_int}>
+             <div>
+               <div className="pt-6">
+                 <div className="flex">
+                   <div
+                     className="shrink-0 w-10 h-10 bg-gray-300 rounded-full overflow-hidden mr-4 object-cover">
+                     {switch (Feedback.coachAvatarUrl(f)) {
+                      | Some(avatarUrl) => <img src=avatarUrl />
+                      | None => <Avatar name={Feedback.coachName(f)} />
+                      }}
+                   </div>
+                   <div>
+                     <div className="flex flex-col md:flex-row">
+                       <p
+                         className="font-semibold text-sm leading-tight inline-flex">
+                         {Feedback.coachName(f)->str}
+                       </p>
+                       <p
+                         className="block md:inline-flex text-xs text-gray-800 md:ml-2 leading-tight">
+                         {("(" ++ Feedback.coachTitle(f) ++ ")")->str}
+                       </p>
+                     </div>
                      <p
-                       className="font-semibold text-sm leading-tight inline-flex">
-                       {Feedback.coachName(f)->str}
-                     </p>
-                     <p
-                       className="block md:inline-flex text-xs text-gray-800 md:ml-2 leading-tight">
-                       {("(" ++ Feedback.coachTitle(f) ++ ")")->str}
+                       className="text-xs leading-tight font-semibold inline-block text-gray-800">
+                       {Feedback.createdAtPretty(f)->str}
                      </p>
                    </div>
-                   <p
-                     className="text-xs leading-tight font-semibold inline-block text-gray-800">
-                     {Feedback.createdAtPretty(f)->str}
-                   </p>
+                 </div>
+                 <div className="md:ml-14">
+                   <MarkdownBlock
+                     className="pt-1 text-sm"
+                     profile=Markdown.Permissive
+                     markdown={Feedback.value(f)}
+                   />
                  </div>
                </div>
-               <div className="md:ml-14">
-                 <MarkdownBlock
-                   className="pt-1 text-sm"
-                   profile=Markdown.Permissive
-                   markdown={Feedback.value(f)}
-                 />
-               </div>
              </div>
-           </div>
-         </Spread>,
+           </Spread>,
        ArrayUtils.copyAndSort(
          (x, y) =>
            DateFns.differenceInSeconds(
@@ -1811,7 +1820,6 @@ let make =
                reviewChecklist
                updateFeedbackCB={feedback =>
                  send(
-                   
                    GenerateFeeback(
                      feedback,
                      findEditor(pending, overlaySubmission),

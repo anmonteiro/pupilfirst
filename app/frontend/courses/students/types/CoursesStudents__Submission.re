@@ -33,20 +33,21 @@ let timeDistance = t =>
   t.createdAt->(DateFns.formatDistanceToNowStrict(~addSuffix=true, ()));
 let makeFromJs = submissions =>
   Js.Array.map(
-    ~f=submission => {
-      let createdAt = submission##createdAt->DateFns.decodeISO;
-      let passedAt =
-        submission##passedAt->(Belt.Option.map(DateFns.decodeISO));
-      let evaluatedAt =
-        submission##evaluatedAt->(Belt.Option.map(DateFns.decodeISO));
-      make(
-        ~id=submission##id,
-        ~title=submission##title,
-        ~createdAt,
-        ~passedAt,
-        ~levelId=submission##levelId,
-        ~evaluatedAt,
-      );
-    },
+    ~f=
+      submission => {
+        let createdAt = submission##createdAt->DateFns.decodeISO;
+        let passedAt =
+          submission##passedAt->(Belt.Option.map(DateFns.decodeISO));
+        let evaluatedAt =
+          submission##evaluatedAt->(Belt.Option.map(DateFns.decodeISO));
+        make(
+          ~id=submission##id,
+          ~title=submission##title,
+          ~createdAt,
+          ~passedAt,
+          ~levelId=submission##levelId,
+          ~evaluatedAt,
+        );
+      },
     submissions,
   );

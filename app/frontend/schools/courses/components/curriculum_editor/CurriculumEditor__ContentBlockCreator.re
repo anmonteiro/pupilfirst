@@ -798,7 +798,6 @@ let make =
                               if (current == 100) {
                                 DoughnutChart.Indeterminate;
                               } else {
-                                
                                 DoughnutChart.Determinate(current, 100);
                               }
                             }

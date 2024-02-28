@@ -39,10 +39,7 @@ let loadContentBlocks = (targetId, send, version) => {
          | Some(v) => v
          | None => versions[0]
          };
-       send(
-         
-         LoadContent(contentBlocks, versions, selectedVersion),
-       );
+       send(LoadContent(contentBlocks, versions, selectedVersion));
        Js.Promise.resolve();
      })
   |> ignore;

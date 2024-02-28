@@ -86,8 +86,7 @@ let reducer = (state, action) =>
       },
     }
   | UpdateFilterString(filterString) => {...state, filterString}
-  | 
-    LoadNotifications(endCursor, hasNextPage, newTopics, totalEntriesCount) =>
+  | LoadNotifications(endCursor, hasNextPage, newTopics, totalEntriesCount) =>
     let updatedTopics =
       switch (state.loading) {
       | LoadingMore =>
@@ -121,7 +120,6 @@ let reducer = (state, action) =>
         switch (state.entries) {
         | Unloaded => Unloaded
         | PartiallyLoaded(entries, cursor) =>
-          
           PartiallyLoaded(markAllNotifications(entries), cursor)
         | FullyLoaded(entries) => FullyLoaded(markAllNotifications(entries))
         },
@@ -226,7 +224,6 @@ let getEntries = (send, cursor, filter) => {
          response##notifications##nodes
          |> Js.Array.map(~f=topicData => Entry.makeFromJS(topicData));
        send(
-         
          LoadNotifications(
            response##notifications##pageInfo##endCursor,
            response##notifications##pageInfo##hasNextPage,
@@ -261,12 +258,13 @@ let entriesList = (caption, entries, send) =>
     <div className="text-xs text-gray-800 px-4 lg:px-8"> {str(caption)} </div>
     <div>
       {Js.Array.map(
-         ~f=entry =>
-           <Notifications__EntryCard
-             key={Entry.id(entry)}
-             entry
-             markNotificationCB={markNotification(send)}
-           />,
+         ~f=
+           entry =>
+             <Notifications__EntryCard
+               key={Entry.id(entry)}
+               entry
+               markNotificationCB={markNotification(send)}
+             />,
          entries,
        )
        ->React.array}
@@ -364,7 +362,9 @@ let unselected = state => {
         )
       )
     |> Js.Array.map(~f=s => Selectable.status(s));
-  eventFilters |> Js.Array.concat(~other=title) |> Js.Array.concat(~other=status);
+  eventFilters
+  |> Js.Array.concat(~other=title)
+  |> Js.Array.concat(~other=status);
 };
 let defaultOptions = () =>
   [|`Read, `Unread|] |> Array.map(s => Selectable.status(s));
@@ -434,23 +434,24 @@ let showEntries = (entries, state, send) => {
   } else {
     <div>
       {Js.Array.map(
-         ~f=d => {
-           let entries =
-             Js.Array.filter(
-               ~f=e => Js.Date.toDateString(Entry.createdAt(e)) == d,
-               filteredEntries,
+         ~f=
+           d => {
+             let entries =
+               Js.Array.filter(
+                 ~f=e => Js.Date.toDateString(Entry.createdAt(e)) == d,
+                 filteredEntries,
+               );
+             let heading =
+               if (d == Js.Date.toDateString(Js.Date.make())) {
+                 "Today";
+               } else {
+                 d;
+               };
+             ReactUtils.nullIf(
+               entriesList(heading, entries, send),
+               ArrayUtils.isEmpty(entries),
              );
-           let heading =
-             if (d == Js.Date.toDateString(Js.Date.make())) {
-               "Today";
-             } else {
-               d;
-             };
-           ReactUtils.nullIf(
-             entriesList(heading, entries, send),
-             ArrayUtils.isEmpty(entries),
-           );
-         },
+           },
          dates,
        )
        ->React.array}

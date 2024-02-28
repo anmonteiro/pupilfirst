@@ -64,8 +64,7 @@ let reducer = (state, action) =>
   switch (action) {
   | UnsetSearchString => {...state, filterInput: ""}
   | UpdateFilterInput(filterInput) => {...state, filterInput}
-  | 
-    LoadSubmissions(
+  | LoadSubmissions(
       endCursor,
       hasNextPage,
       newTopics,
@@ -256,7 +255,6 @@ let getSubmissions = (send, courseId, cursor, filter) => {
        let coaches = Js.Array.map(response##coaches, ~f=Coach.makeFromJs);
        let level = OptionUtils.map(Level.makeFromJs, response##level);
        send(
-         
          LoadSubmissions(
            response##submissions##pageInfo##endCursor,
            response##submissions##pageInfo##hasNextPage,
@@ -279,7 +277,9 @@ let getLevels = (send, courseId, state) =>
     send(SetLevelLoading);
     LevelsQuery.make({courseId: courseId})
     |> Js.Promise.then_(response => {
-         send(LoadLevels(Js.Array.map(~f=Level.makeFromJs, response##levels)));
+         send(
+           LoadLevels(Js.Array.map(~f=Level.makeFromJs, response##levels)),
+         );
          Js.Promise.resolve();
        })
     |> ignore;

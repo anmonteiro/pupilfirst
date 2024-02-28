@@ -18,25 +18,29 @@ let email = t => t.email;
 let issuedCertificates = t => t.issuedCertificates;
 let addNewCertificate = (t, certificate) => {
   ...t,
-  issuedCertificates: Js.Array.concat(t.issuedCertificates, ~other=[|certificate|]),
+  issuedCertificates:
+    Js.Array.concat(t.issuedCertificates, ~other=[|certificate|]),
 };
 let updateCertificate = (t, certificate) => {
   ...t,
   issuedCertificates:
     Js.Array.map(
-      ~f=ic =>
-        if (StudentActions__IssuedCertificate.id(certificate)
-            == StudentActions__IssuedCertificate.id(ic)) {
-          certificate;
-        } else {
-          ic;
-        },
+      ~f=
+        ic =>
+          if (StudentActions__IssuedCertificate.id(certificate)
+              == StudentActions__IssuedCertificate.id(ic)) {
+            certificate;
+          } else {
+            ic;
+          },
       t.issuedCertificates,
     ),
 };
 let hasLiveCertificate = t =>
   Js.Array.find(
-    ~f=ic => StudentActions__IssuedCertificate.revokedAt(ic)->Belt.Option.isNone,
+    ~f=
+      ic =>
+        StudentActions__IssuedCertificate.revokedAt(ic)->Belt.Option.isNone,
     t.issuedCertificates,
   )
   ->Belt.Option.isSome;

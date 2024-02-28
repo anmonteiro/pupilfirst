@@ -23,23 +23,25 @@ let make = (~id, ~name, ~teamTags, ~students, ~coachIds, ~levelId) => {
 };
 let makeFromJS = teamDetails =>
   Js.Array.map(
-    ~f=team => {
-      let students =
-        Js.Array.map(
-          ~f=studentDetails =>
-            StudentsEditor__Student.makeFromJS(studentDetails),
-          team##students,
+    ~f=
+      team => {
+        let students =
+          Js.Array.map(
+            ~f=
+              studentDetails =>
+                StudentsEditor__Student.makeFromJS(studentDetails),
+            team##students,
+          );
+        let coachIds = Js.Array.map(~f=cids => cids, team##coachIds);
+        make(
+          ~id=team##id,
+          ~name=team##name,
+          ~teamTags=team##teamTags,
+          ~levelId=team##levelId,
+          ~students,
+          ~coachIds,
         );
-      let coachIds = Js.Array.map(~f=cids => cids, team##coachIds);
-      make(
-        ~id=team##id,
-        ~name=team##name,
-        ~teamTags=team##teamTags,
-        ~levelId=team##levelId,
-        ~students,
-        ~coachIds,
-      );
-    },
+      },
     teamDetails,
   );
 let update = (~name, ~teamTags, ~student, ~coachIds, ~team) => {
@@ -78,13 +80,14 @@ let updateStudent = (t, student) => {
   ...t,
   students:
     Js.Array.map(
-      ~f=s =>
-        if (StudentsEditor__Student.id(student)
-            == StudentsEditor__Student.id(s)) {
-          student;
-        } else {
-          s;
-        },
+      ~f=
+        s =>
+          if (StudentsEditor__Student.id(student)
+              == StudentsEditor__Student.id(s)) {
+            student;
+          } else {
+            s;
+          },
       t.students,
     ),
 };

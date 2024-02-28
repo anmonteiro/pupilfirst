@@ -28,7 +28,10 @@ let reducer = (state, action) =>
     let updatedStudent =
       switch (state.loading) {
       | LoadingMore =>
-        Js.Array.concat(PagedStudents.toArray(state.students), ~other=students)
+        Js.Array.concat(
+          PagedStudents.toArray(state.students),
+          ~other=students,
+        )
       | Reloading(_) => students
       };
 
@@ -93,7 +96,10 @@ let getStudents = (send, courseId, cursor, params) => {
            response.courseStudents.pageInfo.hasNextPage,
            response.courseStudents.nodes
            ->(
-               Js.Array.map(~f=(studentDetails: CourseStudentsQuery.t_courseStudents_nodes) =>
+               Js.Array.map(
+                 ~f=(
+                      studentDetails: CourseStudentsQuery.t_courseStudents_nodes,
+                    ) =>
                  StudentInfo.make(
                    ~id=studentDetails.id,
                    ~taggings=studentDetails.taggings,
@@ -126,9 +132,7 @@ let reloadStudents = (courseId, send, params) => {
 
 let onSelect = (key, value, params) => {
   Webapi.Url.URLSearchParams.set(key, value, params);
-  ReasonReactRouter.push(
-    "?" ++ Webapi.Url.URLSearchParams.toString(params),
-  );
+  ReasonReactRouter.push("?" ++ Webapi.Url.URLSearchParams.toString(params));
 };
 
 let showTag = (~value=?, key, text, color, params) => {

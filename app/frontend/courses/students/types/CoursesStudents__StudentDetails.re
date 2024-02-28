@@ -66,7 +66,9 @@ let addNewNote = (note, t) => {
 let removeNote = (noteId, t) => {
   let notes =
     t.coachNotes
-    |> Js.Array.filter(~f=note => CoursesStudents__CoachNote.id(note) != noteId);
+    |> Js.Array.filter(~f=note =>
+         CoursesStudents__CoachNote.id(note) != noteId
+       );
   {...t, coachNotes: notes, hasArchivedNotes: true};
 };
 let computeAverageQuizScore = quizScores => {

@@ -31,7 +31,8 @@ let reducer = (state, action) =>
     }
   | SelectCohort(cohort) => {
       ...state,
-      selectedCohorts: Js.Array.concat(state.selectedCohorts, ~other=[|cohort|]),
+      selectedCohorts:
+        Js.Array.concat(state.selectedCohorts, ~other=[|cohort|]),
     }
   | DeSelectCohort(cohort) => {
       ...state,

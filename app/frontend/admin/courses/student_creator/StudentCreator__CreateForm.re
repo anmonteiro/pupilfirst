@@ -88,7 +88,6 @@ let loadData = (courseId, send) => {
   )
   |> Js.Promise.then_((response: StudentsCreateDataQuery.t) => {
        send(
-         
          SetBaseData(
            response.course.cohorts
            ->(Js.Array.map(~f=Cohort.makeFromFragment)),
@@ -104,20 +103,22 @@ let createStudents = (state, send, courseId, cohort, event) => {
   send(SetSaving);
   let students =
     Js.Array.map(
-      ~f=t =>
-        Js.Array.map(
-          ~f=s =>
-            CreateStudentsQuery.makeInputObjectStudentEnrollmentInput(
-              ~name=StudentInfo.name(s),
-              ~email=StudentInfo.email(s),
-              ~title=StudentInfo.title(s),
-              ~affiliation=StudentInfo.affiliation(s),
-              ~teamName=TeamInfo.name(t),
-              ~tags=TeamInfo.tags(t),
-              (),
-            ),
-          TeamInfo.students(t),
-        ),
+      ~f=
+        t =>
+          Js.Array.map(
+            ~f=
+              s =>
+                CreateStudentsQuery.makeInputObjectStudentEnrollmentInput(
+                  ~name=StudentInfo.name(s),
+                  ~email=StudentInfo.email(s),
+                  ~title=StudentInfo.title(s),
+                  ~affiliation=StudentInfo.affiliation(s),
+                  ~teamName=TeamInfo.name(t),
+                  ~tags=TeamInfo.tags(t),
+                  (),
+                ),
+            TeamInfo.students(t),
+          ),
       state.teamsToAdd,
     )
     |> ArrayUtils.flattenV2;
@@ -322,8 +323,7 @@ let make = (~courseId) => {
              ->(
                  Js.Array.map(~f=team =>
                    switch (TeamInfo.nature(team)) {
-                   | 
-                     TeamInfo.MultiMember(teamName, studentsInTeam) =>
+                   | TeamInfo.MultiMember(teamName, studentsInTeam) =>
                      <div className="mt-3" key=teamName>
                        {teamHeader(teamName, studentsInTeam->Array.length)}
                        {TeamInfo.tags(team)->tagBoxes}

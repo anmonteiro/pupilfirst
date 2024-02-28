@@ -84,7 +84,8 @@ let renderTargetGroup =
     (targetGroup, targets, statusOfTargets, author, courseId) => {
   let targetGroupId = targetGroup |> TargetGroup.id;
   let targets =
-    targets |> Js.Array.filter(~f=t => t |> Target.targetGroupId == targetGroupId);
+    targets
+    |> Js.Array.filter(~f=t => t |> Target.targetGroupId == targetGroupId);
 
   <div
     key={"target-group-" ++ targetGroupId}
@@ -174,7 +175,9 @@ let handleLockedLevel = level =>
 let statusOfMilestoneTargets = (targetGroups, targets, level, statusOfTargets) => {
   let targetGroupsInLevel =
     targetGroups
-    |> Js.Array.filter(~f=tg => tg |> TargetGroup.levelId == (level |> Level.id));
+    |> Js.Array.filter(~f=tg =>
+         tg |> TargetGroup.levelId == (level |> Level.id)
+       );
   let milestoneTargetGroupIds =
     targetGroupsInLevel
     |> Js.Array.filter(~f=tg => tg |> TargetGroup.milestone)
@@ -190,7 +193,8 @@ let statusOfMilestoneTargets = (targetGroups, targets, level, statusOfTargets) =
 
   statusOfTargets
   |> Js.Array.filter(~f=ts =>
-       milestoneTargetIds |> Js.Array.includes(~value=TargetStatus.targetId(ts))
+       milestoneTargetIds
+       |> Js.Array.includes(~value=TargetStatus.targetId(ts))
      );
 };
 
@@ -248,7 +252,7 @@ let computeLevelUp =
       if (currentLevelAttempted) {
         let hasRejectedSubmissions =
           TargetStatus.anyRejected(statusOfCurrentMilestoneTargets);
-        
+
         LevelUpBlocked(currentLevelNumber, hasRejectedSubmissions);
       } else {
         Nothing;
@@ -264,7 +268,6 @@ let computeLevelUp =
       let minimumLevelNumber = currentLevelNumber - progressionLimit;
 
       if (minimumLevelNumber >= 1) {
-        
         LevelUpLimited(currentLevelNumber, minimumLevelNumber);
       } else {
         Nothing;

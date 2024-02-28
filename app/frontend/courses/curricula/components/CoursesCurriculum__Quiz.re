@@ -71,7 +71,10 @@ let handleSubmit =
     (answer, target, selectedAnswersIds, setSaving, addSubmissionCB, event) => {
   event |> React.Event.Mouse.preventDefault;
   let answerIds =
-    Js.Array.concat(selectedAnswersIds, ~other=[|QuizQuestion.answerId(answer)|]);
+    Js.Array.concat(
+      selectedAnswersIds,
+      ~other=[|QuizQuestion.answerId(answer)|],
+    );
   createQuizSubmission(target, answerIds, setSaving, addSubmissionCB);
 };
 [@react.component]

@@ -68,23 +68,18 @@ let isInvalidImageFile = image =>
 let updateLogoOnLightBg = (send, event) => {
   let imageFile = React.Event.Form.target(event)##files[0];
   send(
-    
     SelectLogoOnLightBgFile(imageFile##name, imageFile |> isInvalidImageFile),
   );
 };
 let updateCoverImage = (send, event) => {
   let imageFile = React.Event.Form.target(event)##files[0];
   send(
-    
     SelectCoverImageFile(imageFile##name, imageFile |> isInvalidImageFile),
   );
 };
 let updateIcon = (send, event) => {
   let imageFile = React.Event.Form.target(event)##files[0];
-  send(
-    
-    SelectIconFile(imageFile##name, imageFile |> isInvalidImageFile),
-  );
+  send(SelectIconFile(imageFile##name, imageFile |> isInvalidImageFile));
 };
 let imageUploader =
     (

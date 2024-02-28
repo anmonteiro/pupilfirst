@@ -215,7 +215,8 @@ let make =
           {replyToPostId
            ->(
                Belt.Option.flatMap(postId =>
-                 replies |> Js.Array.find(~f=reply => postId == Post.id(reply))
+                 replies
+                 |> Js.Array.find(~f=reply => postId == Post.id(reply))
                )
              )
            ->(

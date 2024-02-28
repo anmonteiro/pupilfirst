@@ -158,12 +158,13 @@ let updateOverlaySubmission = (submission, t) => {
   submission,
   allSubmissions:
     Js.Array.map(
-      ~f=s =>
-        if (SubmissionMeta.id(s) == OverlaySubmission.id(submission)) {
-          updateMetaSubmission(submission);
-        } else {
-          s;
-        },
+      ~f=
+        s =>
+          if (SubmissionMeta.id(s) == OverlaySubmission.id(submission)) {
+            updateMetaSubmission(submission);
+          } else {
+            s;
+          },
       t.allSubmissions,
     ),
 };

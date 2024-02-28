@@ -155,8 +155,7 @@ let reducer = (state, action) =>
       loading: LoadingV2.setReloading(state.loading),
     }
   | UpdateFilterString(filterString) => {...state, filterString}
-  | 
-    LoadCourses(
+  | LoadCourses(
       endCursor,
       hasNextPage,
       newCourses,
@@ -266,7 +265,6 @@ let loadCourses = (courseId, state, cursor, ~skipSchoolStatsLoad=true, send) => 
            })
          );
        send(
-         
          LoadCourses(
            response.courses.pageInfo.endCursor,
            response.courses.pageInfo.hasNextPage,
@@ -349,7 +347,10 @@ let unselected = state => {
 };
 
 let defaultOptions = () =>
-  Js.Array.map(~f=s => Selectable.status(s), [|`Active, `Ended, `Archived|]);
+  Js.Array.map(
+    ~f=s => Selectable.status(s),
+    [|`Active, `Ended, `Archived|],
+  );
 
 let selected = state => {
   let status =
@@ -799,7 +800,7 @@ let make = (~school) => {
                 )}
              </div>
            </div>
-         |  PartiallyLoaded(courses, cursor) =>
+         | PartiallyLoaded(courses, cursor) =>
            <div>
              {showCourses(courses, state)}
              {switch (state.loading) {

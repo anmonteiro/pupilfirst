@@ -44,8 +44,7 @@ type nonrec action =
 let reducer = (state, action) =>
   switch (action) {
   | UpdateFilterString(filterString) => {...state, filterString}
-  | 
-    LoadTopics(endCursor, hasNextPage, newTopics, totalTopicsCount) =>
+  | LoadTopics(endCursor, hasNextPage, newTopics, totalTopicsCount) =>
     let updatedTopics =
       switch (state.loading) {
       | LoadingMore =>
@@ -138,7 +137,6 @@ let getTopics = (send, communityId, cursor, filter) => {
          response##topics##nodes
          |> Js.Array.map(~f=topicData => Topic.makeFromJS(topicData));
        send(
-         
          LoadTopics(
            response##topics##pageInfo##endCursor,
            response##topics##pageInfo##hasNextPage,
@@ -528,27 +526,29 @@ let categoryDropdownContents = (availableTopicCategories, filter) => {
     Belt.Option.mapWithDefault(
       filter.topicCategory, availableTopicCategories, topicCategory =>
       Js.Array.filter(
-        ~f=availableTopicCategory =>
-          TopicCategory.id(availableTopicCategory)
-          != TopicCategory.id(topicCategory),
+        ~f=
+          availableTopicCategory =>
+            TopicCategory.id(availableTopicCategory)
+            != TopicCategory.id(topicCategory),
         availableTopicCategories,
       )
     );
   Js.Array.map(
-    ~f=topicCategory => {
-      let (color, _) = TopicCategory.color(topicCategory);
-      let style = ReactDOM.Style.make(~backgroundColor=color, ());
-      let categoryName = TopicCategory.name(topicCategory);
-      <div
-        ariaLabel={"Select category " ++ categoryName}
-        className="pl-3 pr-4 py-2 font-normal flex items-center"
-        onClick={_ =>
-          updateParams({...filter, topicCategory: Some(topicCategory)})
-        }>
-        <div className="w-3 h-3 rounded" style />
-        <span className="ml-1"> categoryName->str </span>
-      </div>;
-    },
+    ~f=
+      topicCategory => {
+        let (color, _) = TopicCategory.color(topicCategory);
+        let style = ReactDOM.Style.make(~backgroundColor=color, ());
+        let categoryName = TopicCategory.name(topicCategory);
+        <div
+          ariaLabel={"Select category " ++ categoryName}
+          className="pl-3 pr-4 py-2 font-normal flex items-center"
+          onClick={_ =>
+            updateParams({...filter, topicCategory: Some(topicCategory)})
+          }>
+          <div className="w-3 h-3 rounded" style />
+          <span className="ml-1"> categoryName->str </span>
+        </div>;
+      },
     selectableTopicCategories,
   );
 };

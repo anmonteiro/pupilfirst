@@ -45,7 +45,6 @@ let make = (~seconds, ~timeoutCB) => {
              if (state.seconds == 0) {
                DoughnutChart.Indeterminate;
              } else {
-               
                DoughnutChart.Determinate(state.seconds, seconds);
              }
            }

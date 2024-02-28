@@ -170,17 +170,13 @@ let make = (~communities, ~courses) => {
                 <SchoolCommunities__CategoryManager
                   community
                   deleteCategoryCB={categoryId =>
-                    send(
-                       DeleteCategory(community, categoryId),
-                    )
+                    send(DeleteCategory(community, categoryId))
                   }
                   createCategoryCB={category =>
-                    send( AddCategory(community, category))
+                    send(AddCategory(community, category))
                   }
                   updateCategoryCB={category =>
-                    send(
-                       UpdateCategory(community, category),
-                    )
+                    send(UpdateCategory(community, category))
                   }
                   setDirtyCB={(categoryId, dirty) =>
                     setDirtyCategory(send, categoryId, dirty)
