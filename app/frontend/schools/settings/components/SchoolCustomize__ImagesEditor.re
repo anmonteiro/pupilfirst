@@ -1,0 +1,215 @@
+open SchoolCustomize__Types;
+let str = React.string;
+let t = I18n.t(~scope="components.SchoolCustomize__ImagesEditor");
+let ts = I18n.t(~scope="shared");
+type nonrec action =
+  | SelectLogoOnLightBgFile(string, bool)
+  | SelectCoverImageFile(string, bool)
+  | SelectIconFile(string, bool)
+  | BeginUpdate
+  | ErrorOccured
+  | DoneUpdating;
+type nonrec state = {
+  logoOnLightBgFilename: option(string),
+  logoOnLightBgInvalid: bool,
+  coverImageFilename: option(string),
+  coverImageInvalid: bool,
+  iconFilename: option(string),
+  iconInvalid: bool,
+  updating: bool,
+  formDirty: bool,
+};
+let updateButtonText = updating =>
+  if (updating) {
+    ts("updating") ++ "...";
+  } else {
+    t("update_images");
+  };
+let formId = "sc-images-editor__form";
+let handleUpdateImages = (send, updateImagesCB, event) => {
+  event |> React.Event.Form.preventDefault;
+  send(BeginUpdate);
+  let element = ReactDOM.querySelector("#" ++ formId);
+  switch (element) {
+  | Some(element) =>
+    Api.sendFormData(
+      "/school/images",
+      DomUtils.FormData.create(element),
+      json => {
+        Notification.success(
+          ts("notifications.done_exclamation"),
+          t("updated_notification"),
+        );
+        updateImagesCB(json);
+        send(DoneUpdating);
+      },
+      () => send(ErrorOccured),
+    )
+  | None => ()
+  };
+};
+let updateButtonDisabled = state =>
+  if (state.updating) {
+    true;
+  } else {
+    !state.formDirty || state.logoOnLightBgInvalid || state.iconInvalid;
+  };
+let maxAllowedSize = 2 * 1024 * 1024;
+let isInvalidImageFile = image =>
+  (
+    switch (image##_type) {
+    | "image/jpeg"
+    | "image/png" => false
+    | _ => true
+    }
+  )
+  ||
+  image##size > maxAllowedSize;
+let updateLogoOnLightBg = (send, event) => {
+  let imageFile = React.Event.Form.target(event)##files[0];
+  send(
+    
+    SelectLogoOnLightBgFile(imageFile##name, imageFile |> isInvalidImageFile),
+  );
+};
+let updateCoverImage = (send, event) => {
+  let imageFile = React.Event.Form.target(event)##files[0];
+  send(
+    
+    SelectCoverImageFile(imageFile##name, imageFile |> isInvalidImageFile),
+  );
+};
+let updateIcon = (send, event) => {
+  let imageFile = React.Event.Form.target(event)##files[0];
+  send(
+    
+    SelectIconFile(imageFile##name, imageFile |> isInvalidImageFile),
+  );
+};
+let imageUploader =
+    (
+      ~id,
+      ~disabled,
+      ~name,
+      ~onChange,
+      ~labelText,
+      ~optionalImageLabel,
+      ~errorState,
+      ~errorMessage,
+    ) =>
+  <div key=id className="mt-4">
+    <label
+      className="block tracking-wide text-gray-800 text-xs font-semibold"
+      htmlFor=id>
+      {labelText |> str}
+    </label>
+    <input
+      disabled
+      className="hidden"
+      name
+      type_="file"
+      accept=".jpg,.jpeg,.png,.gif,image/x-png,image/gif,image/jpeg"
+      id
+      required=false
+      multiple=false
+      onChange
+    />
+    <label className="file-input-label mt-2" htmlFor=id>
+      <i className="fas fa-upload" />
+      <span className="ml-2 truncate"> optionalImageLabel </span>
+    </label>
+    <School__InputGroupError message=errorMessage active=errorState />
+  </div>;
+let initialState = () => {
+  logoOnLightBgFilename: None,
+  logoOnLightBgInvalid: false,
+  coverImageFilename: None,
+  coverImageInvalid: false,
+  iconFilename: None,
+  iconInvalid: false,
+  updating: false,
+  formDirty: false,
+};
+let reducer = (state, action) =>
+  switch (action) {
+  | SelectLogoOnLightBgFile(name, invalid) => {
+      ...state,
+      logoOnLightBgFilename: Some(name),
+      logoOnLightBgInvalid: invalid,
+      formDirty: true,
+    }
+  | SelectIconFile(name, invalid) => {
+      ...state,
+      iconFilename: Some(name),
+      iconInvalid: invalid,
+      formDirty: true,
+    }
+  | SelectCoverImageFile(name, invalid) => {
+      ...state,
+      coverImageFilename: Some(name),
+      coverImageInvalid: invalid,
+      formDirty: true,
+    }
+  | BeginUpdate => {...state, updating: true}
+  | ErrorOccured => {...state, updating: false}
+  | DoneUpdating => initialState()
+  };
+[@react.component]
+let make = (~customizations, ~updateImagesCB, ~authenticityToken) => {
+  let (state, send) = React.useReducer(reducer, initialState());
+  let logoOnLightBg = customizations |> Customizations.logoOnLightBg;
+  let coverImage = customizations |> Customizations.coverImage;
+  let icon = customizations |> Customizations.icon;
+  <form
+    className="mx-8 pt-8"
+    id=formId
+    key="sc-images-editor__form"
+    onSubmit={handleUpdateImages(send, updateImagesCB)}>
+    <input name="authenticity_token" type_="hidden" value=authenticityToken />
+    <h5 className="uppercase text-center border-b border-gray-300 pb-2">
+      {t("manage_images") |> str}
+    </h5>
+    <DisablingCover disabled={state.updating}>
+      <SchoolCustomize__ImageFileInput
+        autoFocus=true
+        id="sc-images-editor__logo-on-400-bg-input"
+        disabled={state.updating}
+        name="logo_on_light_bg"
+        onChange={updateLogoOnLightBg(send)}
+        labelText={t("logo_light_label")}
+        imageName={logoOnLightBg |> OptionUtils.map(Customizations.filename)}
+        selectedImageName={state.logoOnLightBgFilename}
+        errorState={state.logoOnLightBgInvalid}
+      />
+      <SchoolCustomize__ImageFileInput
+        id="sc-images-editor__icon-input"
+        disabled={state.updating}
+        name="icon"
+        onChange={updateIcon(send)}
+        labelText={t("icon")}
+        imageName={Some(icon |> Customizations.filename)}
+        selectedImageName={state.iconFilename}
+        errorState={state.iconInvalid}
+      />
+      <SchoolCustomize__ImageFileInput
+        id="sc-images-editor__cover-image-input"
+        disabled={state.updating}
+        name="cover_image"
+        onChange={updateCoverImage(send)}
+        labelText={t("cover_image")}
+        imageName={coverImage |> OptionUtils.map(Customizations.filename)}
+        selectedImageName={state.coverImageFilename}
+        errorState={state.coverImageInvalid}
+      />
+      <div className="flex justify-end">
+        <button
+          type_="submit"
+          key="sc-images-editor__update-button"
+          disabled={updateButtonDisabled(state)}
+          className="btn btn-primary btn-large mt-6">
+          {updateButtonText(state.updating) |> str}
+        </button>
+      </div>
+    </DisablingCover>
+  </form>;
+};

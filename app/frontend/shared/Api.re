@@ -1,0 +1,94 @@
+exception UnexpectedResponse(int);
+
+let t = I18n.t(~scope="components.Api");
+let ts = I18n.t(~scope="shared");
+
+let apiErrorTitle = x =>
+  switch (x) {
+  | UnexpectedResponse(code) => string_of_int(code)
+  | _ => t("error_notification_title")
+  };
+
+let acceptOrRejectResponse = response =>
+  if (Fetch.Response.ok(response) || Fetch.Response.status(response) == 422) {
+    response |> Fetch.Response.json;
+  } else {
+    Js.Promise.reject(UnexpectedResponse(response |> Fetch.Response.status));
+  };
+
+let handleResponseError = error => {
+  let title = PromiseUtils.errorToExn(error)->apiErrorTitle;
+
+  Notification.error(title, t("error_notification_body"));
+};
+
+let handleResponseJSON = (json, responseCB, errorCB, notify) => {
+  let error = json |> Json.Decode.(optional(field("error", string)));
+
+  switch (error) {
+  | Some(error) =>
+    if (notify) {
+      Notification.error(ts("notifications.something_wrong"), error);
+    } else {
+      ();
+    };
+    errorCB();
+  | None => responseCB(json)
+  };
+};
+
+let handleResponse = (~responseCB, ~errorCB, ~notify=true, promise) =>
+  Js.Promise.(
+    promise
+    |> then_(response => acceptOrRejectResponse(response))
+    |> then_(json =>
+         handleResponseJSON(json, responseCB, errorCB, notify) |> resolve
+       )
+    |> catch(error => {
+         errorCB();
+         Js.log(error);
+         resolve(
+           if (notify) {
+             handleResponseError(error);
+           } else {
+             ();
+           },
+         );
+       })
+    |> ignore
+  );
+
+let sendPayload = (url, payload, responseCB, errorCB, method) =>
+  Fetch.fetchWithInit(
+    url,
+    Fetch.RequestInit.make(
+      ~method_=method,
+      ~body=
+        Fetch.BodyInit.make(Js.Json.stringify(Js.Json.object_(payload))),
+      ~headers=Fetch.HeadersInit.make({"Content-Type": "application/json"}),
+      ~credentials=Fetch.SameOrigin,
+      (),
+    ),
+  )
+  |> handleResponse(~responseCB, ~errorCB);
+
+let sendFormData = (url, formData, responseCB, errorCB) =>
+  Fetch.fetchWithInit(
+    url,
+    Fetch.RequestInit.make(
+      ~method_=Post,
+      ~body=Fetch.BodyInit.makeWithFormData(formData),
+      ~credentials=Fetch.SameOrigin,
+      (),
+    ),
+  )
+  |> handleResponse(~responseCB, ~errorCB);
+
+let get = (~url, ~responseCB, ~errorCB, ~notify) =>
+  Fetch.fetch(url) |> handleResponse(~responseCB, ~errorCB, ~notify);
+
+let create = (url, payload, responseCB, errorCB) =>
+  sendPayload(url, payload, responseCB, errorCB, Post);
+
+let update = (url, payload, responseCB, errorCB) =>
+  sendPayload(url, payload, responseCB, errorCB, Patch);
