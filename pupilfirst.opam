@@ -19,6 +19,7 @@ depends: [
   "melange-json"
   "melange-webapi"
   "reason-react"
+  "reason-react-ppx"
   "graphql_ppx"
   "ocaml-lsp-server" {with-test}
   "ocamlformat" {with-test}
